@@ -44,7 +44,10 @@
       "cloudfoundry/": ["cloudfoundry/src"],
       "@spinnaker/titus": ["titus/src"],
       "titus/*": ["titus/src/*"],
-      "titus/": ["titus/src"]
+      "titus/": ["titus/src"],
+      "@spinnaker/tencent": ["tencent/src"],
+      "tencent/*": ["tencent/src/*"],
+      "tencent": ["tencent/src"]
     },
     "pretty": true,
     "removeComments": true,

@@ -14,6 +14,7 @@ import { TITUS_MODULE } from '@spinnaker/titus';
 import { ECS_MODULE } from '@spinnaker/ecs';
 import '@spinnaker/cloudfoundry';
 
+import { TENCENT_MODULE } from '@spinnaker/tencent';
 module('netflix.spinnaker', [
   CORE_MODULE,
   AMAZON_MODULE,
@@ -29,4 +30,5 @@ module('netflix.spinnaker', [
   KUBERNETES_V2_MODULE,
   KAYENTA_MODULE,
   TITUS_MODULE,
+  TENCENT_MODULE,
 ]);

@@ -50,7 +50,18 @@ window.spinnakerSettings = {
   debugEnabled: debugEnabled,
   defaultCategory: 'serverGroup',
   defaultInstancePort: 80,
-  defaultProviders: ['appengine', 'aws', 'azure', 'cloudfoundry', 'dcos', 'ecs', 'gce', 'kubernetes', 'oracle'],
+  defaultProviders: [
+    'appengine',
+    'aws',
+    'azure',
+    'cloudfoundry',
+    'dcos',
+    'ecs',
+    'gce',
+    'kubernetes',
+    'oracle',
+    'tencent',
+  ],
   defaultTimeZone: process.env.TIMEZONE || 'America/Los_Angeles', // see http://momentjs.com/timezone/docs/#/data-utilities/
   feature: {
     artifacts: artifactsEnabled,
@@ -199,6 +210,12 @@ window.spinnakerSettings = {
         account: 'titustestvpc',
         iamProfile: '{{application}}InstanceProfile',
         region: 'us-east-1',
+      },
+    },
+    tencent: {
+      defaults: {
+        account: 'test',
+        region: 'ap-guangzhou',
       },
     },
   },

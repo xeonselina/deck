@@ -124,7 +124,7 @@ module.exports = angular
                     return true;
                   }
                 }) ||
-                loadBalancer.targetGroups.some(function(targetGroup) {
+                loadBalancer.targetGroups && loadBalancer.targetGroups.some(function(targetGroup) {
                   return targetGroup.instances.some(function(possibleInstance) {
                     if (possibleInstance.id === instance.instanceId) {
                       instanceSummary = possibleInstance;

@@ -87,7 +87,7 @@ export class ServerGroupBasicSettings
       const imageId = image && image.imgIds[values.region] && image.imgIds[values.region][0];
       if (snapshotSet.length && snapshotSet.some(s => s.diskUsage === 'DATA_DISK')) {
         setFieldValue('dataDisks', snapshotSet.filter(s => s.diskUsage === 'DATA_DISK').map((s, index) => ({
-          diskType: 'CLOUD_BASIC',
+          diskType: 'CLOUD_PREMIUM',
           diskSize: s.diskSize,
           snapshotId: s.snapshotId,
           index

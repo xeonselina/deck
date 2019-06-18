@@ -175,7 +175,8 @@ export interface IListenerDescription {
   port: number;
   sslPolicy?: string;
   rules?: IListenerRule[];
-  healthCheck?: ITencentHealthCheck
+  healthCheck?: ITencentHealthCheck;
+  listenerName?: string
 }
 
 export interface IALBTargetGroupDescription {

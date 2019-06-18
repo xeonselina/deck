@@ -474,14 +474,14 @@ export class AwsLoadBalancerTransformer {
           protocol: 'HTTP',
           port: 80,
           rules: [],
+          isNew: true,
           healthCheck: {
             healthSwitch: 1,
             timeOut: 2,
             intervalTime: 5,
             healthNum: 3,
             unHealthNum: 3,
-            showAdvancedSetting: false,
-            isNew: true
+            showAdvancedSetting: false
           }
         },
       ],

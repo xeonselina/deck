@@ -160,9 +160,9 @@ module.exports = angular
               pre[current.key] = current.value
               return pre 
             }, {}) : {},
-            loadBalancerId: forwardLoadBalancer.loadBalancerId,
-            listenerId: forwardLoadBalancer.listenerId,
-            locationId: forwardLoadBalancer.locationId,
+            loadBalancerId: forwardLoadBalancer && forwardLoadBalancer.loadBalancerId,
+            listenerId: forwardLoadBalancer && forwardLoadBalancer.listenerId,
+            locationId: forwardLoadBalancer && forwardLoadBalancer.locationId,
             port: forwardLoadBalancer && forwardLoadBalancer.targetAttributes && forwardLoadBalancer.targetAttributes[0].port, 
             weight: forwardLoadBalancer && forwardLoadBalancer.targetAttributes && forwardLoadBalancer.targetAttributes[0].weight, 
           };

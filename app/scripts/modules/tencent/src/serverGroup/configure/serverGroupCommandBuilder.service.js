@@ -149,7 +149,7 @@ module.exports = angular
             existingPipelineCluster: true,
             dirty: {},
           };
-
+          const forwardLoadBalancer = pipelineCluster.forwardLoadBalancers && pipelineCluster.forwardLoadBalancers[0]
           var viewOverrides = {
             region: region,
             credentials: pipelineCluster.account || pipelineCluster.accountName,
@@ -159,7 +159,12 @@ module.exports = angular
             tags: pipelineCluster.instanceTags && pipelineCluster.instanceTags.length ? pipelineCluster.instanceTags.reduce((pre, current) => {
               pre[current.key] = current.value
               return pre 
-            }, {}) : {}
+            }, {}) : {},
+            loadBalancerId: forwardLoadBalancer.loadBalancerId,
+            listenerId: forwardLoadBalancer.listenerId,
+            locationId: forwardLoadBalancer.locationId,
+            port: forwardLoadBalancer && forwardLoadBalancer.targetAttributes && forwardLoadBalancer.targetAttributes[0].port, 
+            weight: forwardLoadBalancer && forwardLoadBalancer.targetAttributes && forwardLoadBalancer.targetAttributes[0].weight, 
           };
 
           pipelineCluster.strategy = pipelineCluster.strategy || '';

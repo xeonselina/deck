@@ -85,7 +85,7 @@ module.exports = angular
               suspendedProcesses: [],
               securityGroups: [],
               stack: '',
-              freeFormDetails: '',
+              detail: '',
               spotPrice: '',
               tags: {},
               useAmiBlockDeviceMappings: useAmiBlockDeviceMappings,
@@ -161,7 +161,11 @@ module.exports = angular
             credentials: pipelineCluster.account || pipelineCluster.accountName,
             availabilityZones: [],
             viewState: viewState,
-            securityGroups: pipelineCluster.securityGroupIds
+            securityGroups: pipelineCluster.securityGroupIds,
+            tags: pipelineCluster.instanceTags && pipelineCluster.instanceTags.length ? pipelineCluster.instanceTags.reduce((pre, current) => {
+              pre[current.key] = current.value
+              return pre 
+            }, {}) : {}
           };
 
           pipelineCluster.strategy = pipelineCluster.strategy || '';
@@ -246,7 +250,7 @@ module.exports = angular
             application: application.name,
             strategy: '',
             stack: serverGroupName.stack,
-            freeFormDetails: serverGroupName.freeFormDetails,
+            detail: serverGroupName.detail || serverGroupName.freeFormDetails,
             credentials: serverGroup.account,
             cooldown: serverGroup.asg.defaultCooldown,
             enabledMetrics: _.get(serverGroup, 'asg.enabledMetrics', []).map(m => m.metric),

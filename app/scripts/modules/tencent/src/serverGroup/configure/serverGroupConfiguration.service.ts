@@ -341,9 +341,6 @@ export class AwsServerGroupConfigurationService {
 
   public configureImages(command: IAmazonServerGroupCommand): IServerGroupCommandResult {
     const result: IAmazonServerGroupCommandResult = { dirty: {} };
-    if (!command.amiName) {
-      command.virtualizationType = null;
-    }
     if (command.viewState.disableImageSelection) {
       return result;
     }

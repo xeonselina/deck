@@ -1,18 +1,6 @@
 import { module, IPromise } from 'angular';
 import { $q } from 'ngimport';
-import {
-  chain,
-  clone,
-  cloneDeep,
-  extend,
-  find,
-  has,
-  intersection,
-  keys,
-  map,
-  some,
-  xor,
-} from 'lodash';
+import { chain, clone, cloneDeep, extend, find, has, intersection, keys, map, some, xor } from 'lodash';
 
 import {
   AccountService,
@@ -39,13 +27,8 @@ import {
   IServerGroupCommandViewState,
 } from '@spinnaker/core';
 
-import {
-  IKeyPair,
-  IAmazonLoadBalancerSourceData,
-  IScalingProcess,
-  IALBListener
-} from 'tencent/domain';
-import { VpcReader , ITencentVpc } from 'tencent/vpc';
+import { IKeyPair, IAmazonLoadBalancerSourceData, IScalingProcess, IALBListener } from 'tencent/domain';
+import { VpcReader, ITencentVpc } from 'tencent/vpc';
 import { KeyPairsReader } from 'tencent/keyPairs';
 import { AutoScalingProcessService } from '../details/scalingProcesses/AutoScalingProcessService';
 
@@ -64,7 +47,7 @@ export interface IAmazonServerGroupCommandBackingDataFiltered extends IServerGro
   targetGroups: string[];
   vpcList: ITencentVpc[];
   lbList: IAmazonLoadBalancerSourceData[];
-  listenerList: IALBListener[]
+  listenerList: IALBListener[];
 }
 
 export interface IAmazonServerGroupCommandBackingData extends IServerGroupCommandBackingData {
@@ -89,11 +72,12 @@ export interface ITencentDisk {
 }
 
 export interface ITencentInternetAccessible {
-  internetChargeType: string,
-  internetMaxBandwidthOut: number,
-  publicIpAssigned: boolean
+  internetChargeType: string;
+  internetMaxBandwidthOut: number;
+  publicIpAssigned: boolean;
 }
 export interface IAmazonServerGroupCommand extends IServerGroupCommand {
+  detail: string;
   subnetIds: string[];
   internetAccessible: ITencentInternetAccessible;
   systemDisk: ITencentDisk;
@@ -110,13 +94,13 @@ export interface IAmazonServerGroupCommand extends IServerGroupCommand {
   ebsOptimized: boolean;
   healthCheckGracePeriod: number;
   enhancedService: {
-      monitorService: {
-        enabled: boolean
-    },
-      securityService: {
-        enabled: boolean
-    }
-  }
+    monitorService: {
+      enabled: boolean;
+    };
+    securityService: {
+      enabled: boolean;
+    };
+  };
   keyPair: string;
   legacyUdf?: boolean;
   targetHealthyDeployPercentage: number;
@@ -146,15 +130,8 @@ export class AwsServerGroupConfigurationService {
     'GroupTerminatingInstances',
     'GroupTotalInstances',
   ];
-  private terminationPolicies = [
-    'OLDEST_INSTANCE',
-    'NEWEST_INSTANCE'
-  ];
-  private diskTypes = [
-    'CLOUD_BASIC',
-    'CLOUD_PREMIUM',
-    'CLOUD_SSD'
-  ];
+  private terminationPolicies = ['OLDEST_INSTANCE', 'NEWEST_INSTANCE'];
+  private diskTypes = ['CLOUD_BASIC', 'CLOUD_PREMIUM', 'CLOUD_SSD'];
   public static $inject = [
     'securityGroupReader',
     'tencentInstanceTypeService',
@@ -174,7 +151,7 @@ export class AwsServerGroupConfigurationService {
     command.backingData = {
       enabledMetrics: clone(this.enabledMetrics),
       terminationPolicies: clone(this.terminationPolicies),
-      diskTypes: clone(this.diskTypes)
+      diskTypes: clone(this.diskTypes),
     } as IAmazonServerGroupCommandBackingData;
   }
 
@@ -245,7 +222,7 @@ export class AwsServerGroupConfigurationService {
         instanceTypes: this.tencentInstanceTypeService.getAllTypesByRegion(),
         enabledMetrics: $q.when(clone(this.enabledMetrics)),
         terminationPolicies: $q.when(clone(this.terminationPolicies)),
-        diskTypes: $q.when(clone(this.diskTypes))
+        diskTypes: $q.when(clone(this.diskTypes)),
       })
       .then((backingData: Partial<IAmazonServerGroupCommandBackingData>) => {
         let securityGroupReloader = $q.when();
@@ -327,14 +304,14 @@ export class AwsServerGroupConfigurationService {
 
   public configureInstanceTypes(command: IAmazonServerGroupCommand): IServerGroupCommandResult {
     const result: IAmazonServerGroupCommandResult = { dirty: {} };
-      const filtered = this.tencentInstanceTypeService.getAvailableTypesForRegions(command.backingData.instanceTypes, [
-        command.region,
-      ]);
-      if (command.instanceType && !filtered.includes(command.instanceType)) {
-        result.dirty.instanceType = command.instanceType;
-        command.instanceType = null;
-      }
-      command.backingData.filtered.instanceTypes = filtered;
+    const filtered = this.tencentInstanceTypeService.getAvailableTypesForRegions(command.backingData.instanceTypes, [
+      command.region,
+    ]);
+    if (command.instanceType && !filtered.includes(command.instanceType)) {
+      result.dirty.instanceType = command.instanceType;
+      command.instanceType = null;
+    }
+    command.backingData.filtered.instanceTypes = filtered;
     extend(command.viewState.dirty, result.dirty);
     return result;
   }
@@ -367,8 +344,11 @@ export class AwsServerGroupConfigurationService {
     filteredData.vpcList = chain(command.backingData.vpcList)
       .filter({ account: command.credentials, region: command.region })
       .value();
-    if(!command.vpcId || (filteredData.vpcList.length && !filteredData.vpcList.find(vpc => vpc.id === command.vpcId))){
-      command.vpcId = filteredData.vpcList[0].id
+    if (
+      !command.vpcId ||
+      (filteredData.vpcList.length && !filteredData.vpcList.find(vpc => vpc.id === command.vpcId))
+    ) {
+      command.vpcId = filteredData.vpcList[0].id;
     }
     return result;
   }
@@ -381,8 +361,12 @@ export class AwsServerGroupConfigurationService {
     command.backingData.filtered.subnetPurposes = chain(command.backingData.subnets)
       .filter({ account: command.credentials, region: command.region, vpcId: command.vpcId })
       .value();
-    if (!command.subnetIds.every((subnetId) => command.backingData.filtered.subnetPurposes.find(subnet => subnet.id === subnetId))) {
-      command.subnetIds = []
+    if (
+      !command.subnetIds.every(subnetId =>
+        command.backingData.filtered.subnetPurposes.find(subnet => subnet.id === subnetId),
+      )
+    ) {
+      command.subnetIds = [];
     }
     return result;
   }
@@ -462,15 +446,13 @@ export class AwsServerGroupConfigurationService {
 
   public configureLoadBalancerOptions(command: IAmazonServerGroupCommand): IServerGroupCommandResult {
     const result: IAmazonServerGroupCommandResult = { dirty: {} };
-    const newLoadBalancers = this.getLoadBalancerMap(command).filter(
-      lb => lb.vpcId === command.vpcId
-    );
+    const newLoadBalancers = this.getLoadBalancerMap(command).filter(lb => lb.vpcId === command.vpcId);
     if (!newLoadBalancers.find(lb => lb.id === command.loadBalancerId)) {
-      command.loadBalancerId = ''
-      command.listenerId = ''
-      command.locationId = ''
+      command.loadBalancerId = '';
+      command.listenerId = '';
+      command.locationId = '';
     } else {
-      this.refreshListeners(command)
+      this.refreshListeners(command);
     }
     command.backingData.filtered.lbList = newLoadBalancers;
     return result;
@@ -483,10 +465,12 @@ export class AwsServerGroupConfigurationService {
   }
 
   public refreshListeners(command: IAmazonServerGroupCommand) {
-    return this.loadBalancerReader.getLoadBalancerDetails('tencent', command.credentials, command.region, command.loadBalancerId).then(loadBalancers => {
-      command.backingData.listenerList = loadBalancers && loadBalancers[0] && loadBalancers[0].listeners || []
-      this.configureListenerOptions(command)
-    })
+    return this.loadBalancerReader
+      .getLoadBalancerDetails('tencent', command.credentials, command.region, command.loadBalancerId)
+      .then(loadBalancers => {
+        command.backingData.listenerList = (loadBalancers && loadBalancers[0] && loadBalancers[0].listeners) || [];
+        this.configureListenerOptions(command);
+      });
   }
 
   // TODO: Instead of attaching these to the command itself, they could be static methods

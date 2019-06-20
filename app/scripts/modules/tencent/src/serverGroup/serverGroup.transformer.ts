@@ -41,7 +41,7 @@ export class AwsServerGroupTransformer {
   public transformScalingPolicy(policy: IScalingPolicy): IScalingPolicyView {
     const view: IScalingPolicyView = { ...policy } as IScalingPolicyView;
     view.metricAlarm = policy.metricAlarm;
-    this.addComparator(view.metricAlarm)
+    this.addComparator(view.metricAlarm);
     this.addAdjustmentAttributes(view); // simple policies
     return view;
   }
@@ -70,14 +70,10 @@ export class AwsServerGroupTransformer {
   }
 
   public convertServerGroupCommandToDeployConfiguration(base: any): any {
-    for (let key in base){
-      if(typeof base[key] === 'function'){
-        delete base[key]
-      }
-    }
-    let command = Object.assign(base, {
-      backingData: [],
-      viewState: [],
+    let command = {
+      ...base,
+      backingData: {},
+      viewState: {},
       availabilityZones: {},
       type: base.type,
       cloudProvider: 'tencent',
@@ -90,16 +86,18 @@ export class AwsServerGroupTransformer {
       imageId: base.imageId,
       instanceType: base.instanceType,
       subnetIds: base.subnetIds,
-      subnetType:  base.subnetIds.join(''),
+      subnetType: base.subnetIds.join(''),
       credentials: base.credentials,
       capacity: base.capacity, // for pipline deploy
       maxSize: base.capacity.max,
       minSize: base.capacity.min,
       desiredCapacity: base.capacity.desired,
       terminationPolicies: base.terminationPolicies,
-      loginSettings: base.keyPair ? {
-        keyIds: [base.keyPair]
-      } : undefined,
+      loginSettings: base.keyPair
+        ? {
+            keyIds: [base.keyPair],
+          }
+        : undefined,
       targetHealthyDeployPercentage: base.targetHealthyDeployPercentage,
       vpcId: base.vpcId,
       region: base.region,
@@ -108,18 +106,20 @@ export class AwsServerGroupTransformer {
       securityGroupIds: base.securityGroups,
       instanceTags: Object.keys(base.tags).map(tagKey => ({
         key: tagKey,
-        value: base.tags[tagKey]
+        value: base.tags[tagKey],
       })),
-      internetAccessible: base.internetAccessible ? {
-        internetChargeType: base.internetAccessible.internetChargeType,
-        internetMaxBandwidthOut: base.internetAccessible.internetMaxBandwidthOut,
-        publicIpAssigned: base.internetAccessible.publicIpAssigned
-      } : undefined,
+      internetAccessible: base.internetAccessible
+        ? {
+            internetChargeType: base.internetAccessible.internetChargeType,
+            internetMaxBandwidthOut: base.internetAccessible.internetMaxBandwidthOut,
+            publicIpAssigned: base.internetAccessible.publicIpAssigned,
+          }
+        : undefined,
       userData: base.userData ? btoa(base.userData) : undefined,
       defaultCooldown: base.cooldown,
       enhancedService: base.enhancedService,
-      source: base.viewState && base.viewState.mode === 'clone' ? base.source : undefined
-    })
+      source: base.viewState && base.viewState.mode === 'clone' ? base.source : undefined,
+    };
     if (base.loadBalancerId) {
       if (base.listenerId) {
         command.forwardLoadBalancers = [
@@ -130,13 +130,13 @@ export class AwsServerGroupTransformer {
             targetAttributes: [
               {
                 port: base.port,
-                weight: base.weight
-              }
-            ]
-          }
-        ]
+                weight: base.weight,
+              },
+            ],
+          },
+        ];
       } else {
-        command.loadBalancerId = base.loadBalancerId
+        command.loadBalancerId = base.loadBalancerId;
       }
     }
     return command;

@@ -2,14 +2,7 @@ import * as React from 'react';
 import { SortableContainer, SortableElement, SortableHandle, arrayMove, SortEnd } from 'react-sortable-hoc';
 import { FormikErrors, FormikProps } from 'formik';
 import VirtualizedSelect from 'react-virtualized-select';
-import {
-  Application,
-  HelpField,
-  IWizardPageComponent,
-  SpInput,
-  Tooltip,
-  ValidationMessage,
-} from '@spinnaker/core';
+import { Application, HelpField, IWizardPageComponent, SpInput, Tooltip, ValidationMessage } from '@spinnaker/core';
 
 import {
   ALBListenerProtocol,
@@ -51,7 +44,6 @@ export interface IAuthenticateOidcActionConfig {
   userInfoEndpoint: string;
 }
 
-
 export interface IALBListenersProps {
   app: Application;
   formik: FormikProps<IAmazonApplicationLoadBalancerUpsertCommand>;
@@ -65,8 +57,8 @@ export class ALBListeners extends React.Component<IALBListenersProps, IALBListen
     // httpCheckDomain: undefined,
     httpCheckMethod: 'GET',
     httpCheckPath: '/',
-    httpCode: 31
-  }
+    httpCode: 31,
+  };
   private defaultHealthCheck = {
     healthSwitch: 1,
     timeOut: 2,
@@ -74,47 +66,46 @@ export class ALBListeners extends React.Component<IALBListenersProps, IALBListen
     healthNum: 3,
     unHealthNum: 3,
     showAdvancedSetting: false,
-  }
-  private httpCheckMethods = ['GET', 'HEAD']
+  };
+  private httpCheckMethods = ['GET', 'HEAD'];
   private SSLPhrasingOptions = [
     {
       label: 'One-way Authentication',
-      value: 'UNIDIRECTIONAL'
+      value: 'UNIDIRECTIONAL',
     },
     {
       label: 'Two-way Authentication',
-      value: 'MUTUAL'
-    }
-  ]
+      value: 'MUTUAL',
+    },
+  ];
   private httpCodeOptions = [
     {
       label: '1xx',
-      value: 1
+      value: 1,
     },
     {
       label: '2xx',
-      value: 2
+      value: 2,
     },
     {
       label: '3xx',
-      value: 4
+      value: 4,
     },
     {
       label: '4xx',
-      value: 8
+      value: 8,
     },
     {
       label: '5xx',
-      value: 16
+      value: 16,
     },
-  ]
+  ];
   constructor(props: IALBListenersProps) {
     super(props);
     this.state = {
       oidcConfigs: undefined,
     };
   }
-
 
   public validate(
     values: IAmazonApplicationLoadBalancerUpsertCommand,
@@ -135,9 +126,7 @@ export class ALBListeners extends React.Component<IALBListenersProps, IALBListen
     return errors;
   }
 
-  public componentDidMount(): void {
-  }
-
+  public componentDidMount(): void {}
 
   private updateListeners(): void {
     this.props.formik.setFieldValue('listeners', this.props.formik.values.listeners);
@@ -156,8 +145,8 @@ export class ALBListeners extends React.Component<IALBListenersProps, IALBListen
       sslMode: 'UNIDIRECTIONAL',
       certId: '',
       certCaId: undefined,
-      ...listener.certificate
-    }
+      ...listener.certificate,
+    };
   }
 
   private listenerProtocolChanged(listener: IListenerDescription, newProtocol: ALBListenerProtocol): void {
@@ -179,28 +168,35 @@ export class ALBListeners extends React.Component<IALBListenersProps, IALBListen
     this.updateListeners();
   }
 
-  private listenerNameChanged(listener: IListenerDescription, newName: string):void {
+  private listenerNameChanged(listener: IListenerDescription, newName: string): void {
     listener.listenerName = newName;
     this.updateListeners();
   }
 
   private certificateTypeChanged(certificate: IALBListenerCertificate, newType: string): void {
     certificate.sslMode = newType;
-    if (certificate.sslMode === 'UNIDIRECTIONAL' ) {
-      certificate.certCaId = undefined
+    if (certificate.sslMode === 'UNIDIRECTIONAL') {
+      certificate.certCaId = undefined;
     }
     this.updateListeners();
   }
 
-  private handleCertificateChanged(certificate: IALBListenerCertificate, cert: { certId?: string; certCaId?: string}): void {
+  private handleCertificateChanged(
+    certificate: IALBListenerCertificate,
+    cert: { certId?: string; certCaId?: string },
+  ): void {
     Object.assign(certificate, cert);
     this.updateListeners();
   }
 
-  private handleHealthCheckChanged = (healthCheck: ITencentHealthCheck, key: string,  newValue: string | number | boolean): void => {
-    healthCheck[key] = newValue
+  private handleHealthCheckChanged = (
+    healthCheck: ITencentHealthCheck,
+    key: string,
+    newValue: string | number | boolean,
+  ): void => {
+    healthCheck[key] = newValue;
     this.updateListeners();
-  }
+  };
 
   private removeListener(index: number): void {
     this.props.formik.values.listeners.splice(index, 1);
@@ -213,7 +209,7 @@ export class ALBListeners extends React.Component<IALBListenersProps, IALBListen
       protocol: 'HTTP',
       port: 80,
       healthCheck: { ...this.defaultHealthCheck },
-      rules: []
+      rules: [],
     });
     this.updateListeners();
   };
@@ -222,7 +218,7 @@ export class ALBListeners extends React.Component<IALBListenersProps, IALBListen
     const newRule: IListenerRule = {
       domain: '',
       url: '',
-      healthCheck: this.isL7(listener) ? { ...this.defaultHealthCheck, ...this.defaultHttpCheck } : undefined
+      healthCheck: this.isL7(listener) ? { ...this.defaultHealthCheck, ...this.defaultHttpCheck } : undefined,
     };
 
     listener.rules.push(newRule);
@@ -242,8 +238,8 @@ export class ALBListeners extends React.Component<IALBListenersProps, IALBListen
     this.updateListeners();
   };
 
-  private handleRuleChanged = (rule: IListenerRule, key: string,  newValue: string): void => {
-    rule[key] = newValue
+  private handleRuleChanged = (rule: IListenerRule, key: string, newValue: string): void => {
+    rule[key] = newValue;
     this.updateListeners();
   };
 
@@ -317,7 +313,7 @@ export class ALBListeners extends React.Component<IALBListenersProps, IALBListen
   };
 
   public render() {
-    const { isNewListener } = this.props
+    const { isNewListener } = this.props;
     const { errors, values } = this.props.formik;
     const { oidcConfigs } = this.state;
 
@@ -383,58 +379,65 @@ export class ALBListeners extends React.Component<IALBListenersProps, IALBListen
                   </div>
                   {this.needsCert(listener) && (
                     <div>
-                        <div className="wizard-pod-row">
-                          <div className="wizard-pod-row-title">Certificate</div>
-                          <div className="wizard-pod-row-contents">
-                              <div className="wizard-pod-row-data">
-                                <span className="wizard-pod-content">
-                                  <label>SSL Phrasing</label>
-                                  <select
-                                    disabled={!listener.isNew}
-                                    className="form-control input-sm"
-                                    value={listener.certificate.sslMode}
-                                    onChange={event => this.certificateTypeChanged(listener.certificate, event.target.value)}
-                                  >
-                                    {this.SSLPhrasingOptions.map(t => (
-                                      <option key={t.value} value={t.value}>{t.label}</option>
-                                    ))}
-                                  </select>
-                                </span>
-                                <span className="wizard-pod-content">
-                                  <label>Server Certificate</label>
-                                  <input
-                                    disabled={!listener.isNew}
-                                    className="form-control input-sm no-spel"
-                                    type="text"
-                                    value={listener.certificate.certId}
-                                    onChange={event => this.handleCertificateChanged(listener.certificate, {
-                                      certId: event.target.value
-                                    })}
-                                    required={true}
-                                  />
-                                </span>
-                                {
-                                  listener.certificate.sslMode === 'MUTUAL' &&
-                                  <span className="wizard-pod-content">
-                                    <label>Client Certificate</label>
-                                    <input
-                                      disabled={!listener.isNew}
-                                      className="form-control input-sm no-spel"
-                                      type="text"
-                                      value={listener.certificate.certCaId}
-                                      onChange={event => this.handleCertificateChanged(listener.certificate, {
-                                        certCaId: event.target.value
-                                      })}
-                                      required={true}
-                                    />
-                                  </span>
+                      <div className="wizard-pod-row">
+                        <div className="wizard-pod-row-title">Certificate</div>
+                        <div className="wizard-pod-row-contents">
+                          <div className="wizard-pod-row-data">
+                            <span className="wizard-pod-content">
+                              <label>SSL Phrasing</label>
+                              <select
+                                disabled={!listener.isNew}
+                                className="form-control input-sm"
+                                value={listener.certificate.sslMode}
+                                onChange={event =>
+                                  this.certificateTypeChanged(listener.certificate, event.target.value)
                                 }
-                              </div>
+                              >
+                                {this.SSLPhrasingOptions.map(t => (
+                                  <option key={t.value} value={t.value}>
+                                    {t.label}
+                                  </option>
+                                ))}
+                              </select>
+                            </span>
+                            <span className="wizard-pod-content">
+                              <label>Server Certificate</label>
+                              <input
+                                disabled={!listener.isNew}
+                                className="form-control input-sm no-spel"
+                                type="text"
+                                value={listener.certificate.certId}
+                                onChange={event =>
+                                  this.handleCertificateChanged(listener.certificate, {
+                                    certId: event.target.value,
+                                  })
+                                }
+                                required={true}
+                              />
+                            </span>
+                            {listener.certificate.sslMode === 'MUTUAL' && (
+                              <span className="wizard-pod-content">
+                                <label>Client Certificate</label>
+                                <input
+                                  disabled={!listener.isNew}
+                                  className="form-control input-sm no-spel"
+                                  type="text"
+                                  value={listener.certificate.certCaId}
+                                  onChange={event =>
+                                    this.handleCertificateChanged(listener.certificate, {
+                                      certCaId: event.target.value,
+                                    })
+                                  }
+                                  required={true}
+                                />
+                              </span>
+                            )}
                           </div>
                         </div>
+                      </div>
                     </div>
                   )}
-                  {!this.isL7(listener) &&
+                  {!this.isL7(listener) && (
                     <HealthCheck
                       isNewListener={listener.isNew}
                       healthCheck={listener.healthCheck}
@@ -443,7 +446,7 @@ export class ALBListeners extends React.Component<IALBListenersProps, IALBListen
                       httpCheckMethods={this.httpCheckMethods}
                       httpCodeOptions={this.httpCodeOptions}
                     />
-                  }
+                  )}
                   <Rules
                     isNewListener={listener.isNew}
                     addCondition={this.addCondition}
@@ -521,14 +524,16 @@ interface IRuleProps extends IHealthCheckProps {
 
 const Rule = SortableElement((props: IRuleProps) => (
   <div>
-    {props.isL7 && <HealthCheck
-      isNewListener={props.isNewListener}
-      healthCheck={props.rule.healthCheck}
-      isL7={props.isL7}
-      handleHealthCheckChanged={props.handleHealthCheckChanged}
-      httpCheckMethods={props.httpCheckMethods}
-      httpCodeOptions={props.httpCodeOptions}
-    />}
+    {props.isL7 && (
+      <HealthCheck
+        isNewListener={props.isNewListener}
+        healthCheck={props.rule.healthCheck}
+        isL7={props.isL7}
+        handleHealthCheckChanged={props.handleHealthCheckChanged}
+        httpCheckMethods={props.httpCheckMethods}
+        httpCodeOptions={props.httpCodeOptions}
+      />
+    )}
     <div className="wizard-pod-row">
       <div className="wizard-pod-row-contents" style={{ padding: '0' }}>
         <table className="table table-condensed packed rules-table">
@@ -539,8 +544,8 @@ const Rule = SortableElement((props: IRuleProps) => (
               </td>
               <td colSpan={2}>
                 <div className="listener-rule-condition col-md-6">
-                    <label>Host</label>
-                    {/* <HelpField id="aws.loadBalancer.ruleCondition.host" /> */}
+                  <label>Host</label>
+                  {/* <HelpField id="aws.loadBalancer.ruleCondition.host" /> */}
                   <input
                     disabled={!props.isNewListener}
                     className="form-control input-sm"
@@ -553,8 +558,8 @@ const Rule = SortableElement((props: IRuleProps) => (
                   />
                 </div>
                 <div className="listener-rule-condition col-md-6">
-                    <label>Path</label>
-                    {/* <HelpField id="aws.loadBalancer.ruleCondition.path" /> */}
+                  <label>Path</label>
+                  {/* <HelpField id="aws.loadBalancer.ruleCondition.path" /> */}
                   <input
                     disabled={!props.isNewListener}
                     className="form-control input-sm"
@@ -567,19 +572,21 @@ const Rule = SortableElement((props: IRuleProps) => (
                   />
                 </div>
               </td>
-              {props.isNewListener && <td>
-                <RuleActions
-                  ruleIndex={props.ruleIndex}
-                  listener={props.listener}
-                  removeRule={props.removeRule}
-                  actions={props.rule.actions}
-                />
-              </td>}
+              {props.isNewListener && (
+                <td>
+                  <RuleActions
+                    ruleIndex={props.ruleIndex}
+                    listener={props.listener}
+                    removeRule={props.removeRule}
+                    actions={props.rule.actions}
+                  />
+                </td>
+              )}
             </tr>
           </tbody>
         </table>
       </div>
-</div>
+    </div>
   </div>
 ));
 
@@ -627,49 +634,50 @@ interface IRulesProps extends IHealthCheckProps {
 
 const Rules = SortableContainer((props: IRulesProps) => (
   <div>
-    {props.listener.rules && props.listener.rules.map((rule, index) => (
-      <Rule
-        isNewListener={props.isNewListener}
-        key={index}
-        rule={rule}
-        addCondition={props.addCondition}
-        handleConditionFieldChanged={props.handleConditionFieldChanged}
-        handleRuleChanged={props.handleRuleChanged}
-        handleRuleActionTargetChanged={props.handleRuleActionTargetChanged}
-        handleRuleActionPortChanged={props.handleRuleActionPortChanged}
-        handleRuleActionTypeChanged={props.handleRuleActionTypeChanged}
-        oidcConfigChanged={props.oidcConfigChanged}
-        redirectConfigChanged={props.redirectConfigChanged}
-        removeCondition={props.removeCondition}
-        removeRule={props.removeRule}
-        targetGroups={props.targetGroups}
-        oidcConfigs={props.oidcConfigs}
-        listener={props.listener}
-        index={index}
-        ruleIndex={index}
-        configureOidcClient={props.configureOidcClient}
-        configureRedirect={props.configureRedirect}
-        isL7={props.isL7}
-        httpCheckMethods={props.httpCheckMethods}
-        httpCodeOptions={props.httpCodeOptions}
-        handleHealthCheckChanged={props.handleHealthCheckChanged}
-      />
-    ))}
-    {props.isNewListener && (props.listener.protocol === 'HTTP' || props.listener.protocol === 'HTTPS')  &&
-    <table className="table table-condensed packed rules-table">
-      <tbody>
-        <tr className="not-sortable">
-          <td colSpan={5}>
-            <button type="button" className="add-new col-md-12" onClick={() => props.addRule(props.listener)}>
-              <span>
-                <span className="glyphicon glyphicon-plus-sign" /> Add new rule
-              </span>
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-    }
+    {props.listener.rules &&
+      props.listener.rules.map((rule, index) => (
+        <Rule
+          isNewListener={props.isNewListener}
+          key={index}
+          rule={rule}
+          addCondition={props.addCondition}
+          handleConditionFieldChanged={props.handleConditionFieldChanged}
+          handleRuleChanged={props.handleRuleChanged}
+          handleRuleActionTargetChanged={props.handleRuleActionTargetChanged}
+          handleRuleActionPortChanged={props.handleRuleActionPortChanged}
+          handleRuleActionTypeChanged={props.handleRuleActionTypeChanged}
+          oidcConfigChanged={props.oidcConfigChanged}
+          redirectConfigChanged={props.redirectConfigChanged}
+          removeCondition={props.removeCondition}
+          removeRule={props.removeRule}
+          targetGroups={props.targetGroups}
+          oidcConfigs={props.oidcConfigs}
+          listener={props.listener}
+          index={index}
+          ruleIndex={index}
+          configureOidcClient={props.configureOidcClient}
+          configureRedirect={props.configureRedirect}
+          isL7={props.isL7}
+          httpCheckMethods={props.httpCheckMethods}
+          httpCodeOptions={props.httpCodeOptions}
+          handleHealthCheckChanged={props.handleHealthCheckChanged}
+        />
+      ))}
+    {props.isNewListener && (props.listener.protocol === 'HTTP' || props.listener.protocol === 'HTTPS') && (
+      <table className="table table-condensed packed rules-table">
+        <tbody>
+          <tr className="not-sortable">
+            <td colSpan={5}>
+              <button type="button" className="add-new col-md-12" onClick={() => props.addRule(props.listener)}>
+                <span>
+                  <span className="glyphicon glyphicon-plus-sign" /> Add new rule
+                </span>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    )}
   </div>
 ));
 
@@ -677,178 +685,217 @@ interface IHealthCheckProps {
   healthCheck?: ITencentHealthCheck;
   isL7: boolean;
   isNewListener: boolean;
-  handleHealthCheckChanged: (healthCheck: ITencentHealthCheck, key: string,  newValue: string | number | boolean) => void,
-  httpCheckMethods: string[],
-  httpCodeOptions: Option[]
+  handleHealthCheckChanged: (
+    healthCheck: ITencentHealthCheck,
+    key: string,
+    newValue: string | number | boolean,
+  ) => void;
+  httpCheckMethods: string[];
+  httpCodeOptions: Option[];
 }
 
- const HealthCheck = (({ healthCheck, isL7, handleHealthCheckChanged, httpCheckMethods, httpCodeOptions, isNewListener }: IHealthCheckProps) => {
-   return <div>
-   <div className="wizard-pod-row">
-      <div className="wizard-pod-row-title">
-        <span>Health Check &nbsp;</span>
-      </div>
-      <div className="wizard-pod-row-contents">
-        <div className="wizard-pod-row-data">
-          <span className="wizard-pod-content">
-            <select
-              disabled={!isNewListener}
-              className="form-control input-sm"
-              value={healthCheck.healthSwitch}
-              onChange={event => handleHealthCheckChanged(healthCheck, 'healthSwitch', parseInt(event.target.value, 10))}
-            >
-              <option value={1}>enable</option>
-              <option value={0}>disable</option>
-            </select>
-          </span>
-          {!!healthCheck.healthSwitch && !healthCheck.showAdvancedSetting && <span className="wizard-pod-content">
-            <a onClick={() => handleHealthCheckChanged(healthCheck, 'showAdvancedSetting', true)} className="clickable">
-              Configure advanced settings
-            </a>
-          </span>}
-          {!!healthCheck.healthSwitch && healthCheck.showAdvancedSetting && <span className="wizard-pod-content">
-            <label>Timeout </label>
-            <input
-              disabled={!isNewListener}
-              className="form-control input-sm inline-number"
-              type="number"
-              min={2}
-              max={60}
-              value={healthCheck.timeOut || ''}
-              onChange={event => handleHealthCheckChanged(healthCheck, 'timeOut', parseInt(event.target.value, 10))}
-              required={true}
-            />
-          </span>}
-          {!!healthCheck.healthSwitch && healthCheck.showAdvancedSetting && <span className="wizard-pod-content">
-            <label>Interval </label>
-            <input
-              disabled={!isNewListener}
-              className="form-control input-sm inline-number"
-              type="number"
-              min={5}
-              max={300}
-              value={healthCheck.intervalTime || ''}
-              onChange={event => handleHealthCheckChanged(healthCheck, 'intervalTime', parseInt(event.target.value, 10))}
-              required={true}
-            />
-          </span>}
-        </div>
-      </div>
-    </div>
-    {
-      !!healthCheck.healthSwitch && healthCheck.showAdvancedSetting &&
+const HealthCheck = ({
+  healthCheck,
+  isL7,
+  handleHealthCheckChanged,
+  httpCheckMethods,
+  httpCodeOptions,
+  isNewListener,
+}: IHealthCheckProps) => {
+  return (
+    <div>
       <div className="wizard-pod-row">
-        <div className="wizard-pod-row-title">Healthcheck Threshold</div>
+        <div className="wizard-pod-row-title">
+          <span>Health Check &nbsp;</span>
+        </div>
         <div className="wizard-pod-row-contents">
           <div className="wizard-pod-row-data">
             <span className="wizard-pod-content">
-              <label>Healthy </label>
-              <input
+              <select
                 disabled={!isNewListener}
-                className="form-control input-sm inline-number"
-                type="number"
-                min={2}
-                max={10}
-                value={healthCheck.healthNum || ''}
-                onChange={event => handleHealthCheckChanged(healthCheck, 'healthNum', parseInt(event.target.value, 10))}
-                required={true}
-              />
+                className="form-control input-sm"
+                value={healthCheck.healthSwitch}
+                onChange={event =>
+                  handleHealthCheckChanged(healthCheck, 'healthSwitch', parseInt(event.target.value, 10))
+                }
+              >
+                <option value={1}>enable</option>
+                <option value={0}>disable</option>
+              </select>
             </span>
-            <span className="wizard-pod-content">
-              <label>Unhealthy </label>
-              <input
-                disabled={!isNewListener}
-                className="form-control input-sm inline-number"
-                type="number"
-                min={2}
-                max={10}
-                value={healthCheck.unHealthNum || ''}
-                onChange={event => handleHealthCheckChanged(healthCheck, 'unHealthNum', parseInt(event.target.value, 10))}
-                required={true}
-              />
-            </span>
-          </div>
-        </div>
-      </div>
-    }
-    {
-      !!healthCheck.healthSwitch && healthCheck.showAdvancedSetting && isL7 &&
-      <div>
-        <div className="wizard-pod-row">
-          <div className="wizard-pod-row-title">HTTP Check Domain</div>
-          <div className="wizard-pod-row-contents">
-            <div className="wizard-pod-row-data">
+            {!!healthCheck.healthSwitch && !healthCheck.showAdvancedSetting && (
               <span className="wizard-pod-content">
-                <SpInput
-                  disabled={!isNewListener}
-                  className="form-control input-sm inline-text"
-                  style={{ width: '130px' }}
-                  name="httpCheckDomain"
-                  value={healthCheck.httpCheckDomain}
-                  onChange={event => handleHealthCheckChanged(healthCheck, 'httpCheckDomain', event.target.value)}
-                />
+                <a
+                  onClick={() => handleHealthCheckChanged(healthCheck, 'showAdvancedSetting', true)}
+                  className="clickable"
+                >
+                  Configure advanced settings
+                </a>
               </span>
-            </div>
-          </div>
-        </div>
-        <div className="wizard-pod-row">
-          <div className="wizard-pod-row-title">HTTP Check Directories</div>
-          <div className="wizard-pod-row-contents">
-            <div className="wizard-pod-row-data">
+            )}
+            {!!healthCheck.healthSwitch && healthCheck.showAdvancedSetting && (
               <span className="wizard-pod-content">
-                <SpInput
-                  disabled={!isNewListener}
-                  className="form-control input-sm inline-text"
-                  style={{ width: '130px' }}
-                  name="httpCheckPath"
-                  required={true}
-                  value={healthCheck.httpCheckPath}
-                  onChange={event => handleHealthCheckChanged(healthCheck, 'httpCheckPath', event.target.value)}
-                />
-              </span>
-            </div>
-          </div>
-        </div>
-        <div className="wizard-pod-row">
-          <div className="wizard-pod-row-title">HTTP Request Method</div>
-          <div className="wizard-pod-row-contents">
-            <div className="wizard-pod-row-data">
-              <span className="wizard-pod-content">
-                <select
+                <label>Timeout </label>
+                <input
                   disabled={!isNewListener}
                   className="form-control input-sm inline-number"
-                  value={healthCheck.httpCheckMethod}
-                  onChange={event => handleHealthCheckChanged(healthCheck, 'httpCheckMethod', event.target.value)}
-                >
-                {
-                  httpCheckMethods.map(m => (<option key={m} value={m}>{m}</option>))
-                }
-                </select>
+                  type="number"
+                  min={2}
+                  max={60}
+                  value={healthCheck.timeOut || ''}
+                  onChange={event => handleHealthCheckChanged(healthCheck, 'timeOut', parseInt(event.target.value, 10))}
+                  required={true}
+                />
               </span>
-            </div>
+            )}
+            {!!healthCheck.healthSwitch && healthCheck.showAdvancedSetting && (
+              <span className="wizard-pod-content">
+                <label>Interval </label>
+                <input
+                  disabled={!isNewListener}
+                  className="form-control input-sm inline-number"
+                  type="number"
+                  min={5}
+                  max={300}
+                  value={healthCheck.intervalTime || ''}
+                  onChange={event =>
+                    handleHealthCheckChanged(healthCheck, 'intervalTime', parseInt(event.target.value, 10))
+                  }
+                  required={true}
+                />
+              </span>
+            )}
           </div>
         </div>
+      </div>
+      {!!healthCheck.healthSwitch && healthCheck.showAdvancedSetting && (
         <div className="wizard-pod-row">
-          <div className="wizard-pod-row-title">HTTP Status Code Detection</div>
+          <div className="wizard-pod-row-title">Healthcheck Threshold</div>
           <div className="wizard-pod-row-contents">
             <div className="wizard-pod-row-data">
               <span className="wizard-pod-content">
-                <VirtualizedSelect
+                <label>Healthy </label>
+                <input
                   disabled={!isNewListener}
-                  style={{ width: '320px' }}
-                  ignoreAccents={true}
-                  options={httpCodeOptions.map( ({ label, value }) => ({ label, value }))}
-                  onChange={(options: IOption[]) => {
-                    handleHealthCheckChanged(healthCheck, 'httpCode', options.map(({ value }) => value as number).reduce(( acc, cur ) => (acc + cur), 0))
-                  }}
-                  value={healthCheck.httpCode.toString(2).split('').reverse().map((v, i) => (v === '1' && Math.pow(2, i))).filter(v => !!v)}
-                  multi={true}
+                  className="form-control input-sm inline-number"
+                  type="number"
+                  min={2}
+                  max={10}
+                  value={healthCheck.healthNum || ''}
+                  onChange={event =>
+                    handleHealthCheckChanged(healthCheck, 'healthNum', parseInt(event.target.value, 10))
+                  }
+                  required={true}
+                />
+              </span>
+              <span className="wizard-pod-content">
+                <label>Unhealthy </label>
+                <input
+                  disabled={!isNewListener}
+                  className="form-control input-sm inline-number"
+                  type="number"
+                  min={2}
+                  max={10}
+                  value={healthCheck.unHealthNum || ''}
+                  onChange={event =>
+                    handleHealthCheckChanged(healthCheck, 'unHealthNum', parseInt(event.target.value, 10))
+                  }
+                  required={true}
                 />
               </span>
             </div>
           </div>
         </div>
-      </div>
-    }
-  </div>
- })
+      )}
+      {!!healthCheck.healthSwitch && healthCheck.showAdvancedSetting && isL7 && (
+        <div>
+          <div className="wizard-pod-row">
+            <div className="wizard-pod-row-title">HTTP Check Domain</div>
+            <div className="wizard-pod-row-contents">
+              <div className="wizard-pod-row-data">
+                <span className="wizard-pod-content">
+                  <SpInput
+                    disabled={!isNewListener}
+                    className="form-control input-sm inline-text"
+                    style={{ width: '130px' }}
+                    name="httpCheckDomain"
+                    value={healthCheck.httpCheckDomain}
+                    onChange={event => handleHealthCheckChanged(healthCheck, 'httpCheckDomain', event.target.value)}
+                  />
+                </span>
+              </div>
+            </div>
+          </div>
+          <div className="wizard-pod-row">
+            <div className="wizard-pod-row-title">HTTP Check Directories</div>
+            <div className="wizard-pod-row-contents">
+              <div className="wizard-pod-row-data">
+                <span className="wizard-pod-content">
+                  <SpInput
+                    disabled={!isNewListener}
+                    className="form-control input-sm inline-text"
+                    style={{ width: '130px' }}
+                    name="httpCheckPath"
+                    required={true}
+                    value={healthCheck.httpCheckPath}
+                    onChange={event => handleHealthCheckChanged(healthCheck, 'httpCheckPath', event.target.value)}
+                  />
+                </span>
+              </div>
+            </div>
+          </div>
+          <div className="wizard-pod-row">
+            <div className="wizard-pod-row-title">HTTP Request Method</div>
+            <div className="wizard-pod-row-contents">
+              <div className="wizard-pod-row-data">
+                <span className="wizard-pod-content">
+                  <select
+                    disabled={!isNewListener}
+                    className="form-control input-sm inline-number"
+                    value={healthCheck.httpCheckMethod}
+                    onChange={event => handleHealthCheckChanged(healthCheck, 'httpCheckMethod', event.target.value)}
+                  >
+                    {httpCheckMethods.map(m => (
+                      <option key={m} value={m}>
+                        {m}
+                      </option>
+                    ))}
+                  </select>
+                </span>
+              </div>
+            </div>
+          </div>
+          <div className="wizard-pod-row">
+            <div className="wizard-pod-row-title">HTTP Status Code Detection</div>
+            <div className="wizard-pod-row-contents">
+              <div className="wizard-pod-row-data">
+                <span className="wizard-pod-content">
+                  <VirtualizedSelect
+                    disabled={!isNewListener}
+                    style={{ width: '320px' }}
+                    ignoreAccents={true}
+                    options={httpCodeOptions.map(({ label, value }) => ({ label, value }))}
+                    onChange={(options: IOption[]) => {
+                      handleHealthCheckChanged(
+                        healthCheck,
+                        'httpCode',
+                        options.map(({ value }) => value as number).reduce((acc, cur) => acc + cur, 0),
+                      );
+                    }}
+                    value={healthCheck.httpCode
+                      .toString(2)
+                      .split('')
+                      .reverse()
+                      .map((v, i) => v === '1' && Math.pow(2, i))
+                      .filter(v => !!v)}
+                    multi={true}
+                  />
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};

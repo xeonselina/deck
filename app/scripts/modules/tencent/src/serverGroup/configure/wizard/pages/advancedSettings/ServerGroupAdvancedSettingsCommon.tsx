@@ -4,7 +4,10 @@ import Select, { Option } from 'react-select';
 
 import { HelpField, MapEditor } from '@spinnaker/core';
 
-import { IAmazonServerGroupCommand, ITencentDisk } from 'tencent/serverGroup/configure/serverGroupConfiguration.service';
+import {
+  IAmazonServerGroupCommand,
+  ITencentDisk,
+} from 'tencent/serverGroup/configure/serverGroupConfiguration.service';
 
 import { IServerGroupAdvancedSettingsProps } from './ServerGroupAdvancedSettings';
 
@@ -15,7 +18,7 @@ export class ServerGroupAdvancedSettingsCommon extends React.Component<IServerGr
     const errors = {} as any;
 
     if (!values.terminationPolicies || !values.terminationPolicies.length) {
-      errors.terminationPolicies = 'Termination Policies is required'
+      errors.terminationPolicies = 'Termination Policies is required';
     }
 
     if (this.duplicateKeys) {
@@ -30,39 +33,39 @@ export class ServerGroupAdvancedSettingsCommon extends React.Component<IServerGr
     values.dataDisks = values.dataDisks.map((item, index) => ({
       ...item,
       index,
-    }))
-    setFieldValue('dataDisks', values.dataDisks)
-  }
+    }));
+    setFieldValue('dataDisks', values.dataDisks);
+  };
 
   private dataDiskTypeChange = (dataDisk: ITencentDisk, value: string) => {
-    dataDisk.diskType = value
-    this.updateDataDisks()
-  }
+    dataDisk.diskType = value;
+    this.updateDataDisks();
+  };
 
   private dataDiskSizeChange = (dataDisk: ITencentDisk, value: number) => {
-    dataDisk.diskSize = value
-    this.updateDataDisks()
-  }
+    dataDisk.diskSize = value;
+    this.updateDataDisks();
+  };
 
   private dataDiskSnapshotIdChange = (dataDisk: ITencentDisk, value: string) => {
-    dataDisk.snapshotId = value
-    this.updateDataDisks()
-  }
+    dataDisk.snapshotId = value;
+    this.updateDataDisks();
+  };
 
   private onDeleteDataDisk = (index: number): void => {
     const { values } = this.props.formik;
-    values.dataDisks.splice(index , 1)
-    this.updateDataDisks()
-  }
+    values.dataDisks.splice(index, 1);
+    this.updateDataDisks();
+  };
 
   private onAddDataDisk = () => {
     const { values } = this.props.formik;
     values.dataDisks.push({
       diskSize: 50,
-      diskType: 'CLOUD_PREMIUM'
-    })
-    this.updateDataDisks()
-  }
+      diskType: 'CLOUD_PREMIUM',
+    });
+    this.updateDataDisks();
+  };
 
   private tagsChanged = (tags: { [key: string]: string }, duplicateKeys: boolean) => {
     this.duplicateKeys = duplicateKeys;
@@ -113,7 +116,6 @@ export class ServerGroupAdvancedSettingsCommon extends React.Component<IServerGr
             />
           </div>
         </div>
-      
         <div className="form-group">
           <div className="col-md-5 sm-label-right">
             <b>UserData (optional) </b>
@@ -134,12 +136,14 @@ export class ServerGroupAdvancedSettingsCommon extends React.Component<IServerGr
               <input
                 type="checkbox"
                 checked={values.enhancedService.securityService.enabled}
-                onChange={e => setFieldValue('enhancedService', {
-                  ...values.enhancedService,
-                  securityService: {
-                    enabled: e.target.checked
-                  }
-                })}
+                onChange={e =>
+                  setFieldValue('enhancedService', {
+                    ...values.enhancedService,
+                    securityService: {
+                      enabled: e.target.checked,
+                    },
+                  })
+                }
               />{' '}
               Enable Security Service{' '}
             </label>
@@ -156,12 +160,14 @@ export class ServerGroupAdvancedSettingsCommon extends React.Component<IServerGr
               <input
                 type="checkbox"
                 checked={values.enhancedService.monitorService.enabled}
-                onChange={e => setFieldValue('enhancedService', {
-                  ...values.enhancedService,
-                  monitorService: {
-                    enabled: e.target.checked
-                  }
-                })}
+                onChange={e =>
+                  setFieldValue('enhancedService', {
+                    ...values.enhancedService,
+                    monitorService: {
+                      enabled: e.target.checked,
+                    },
+                  })
+                }
               />{' '}
               Enable Instance Monitoring{' '}
             </label>
@@ -176,7 +182,12 @@ export class ServerGroupAdvancedSettingsCommon extends React.Component<IServerGr
               <input
                 type="radio"
                 checked={values.internetAccessible.internetChargeType === 'BANDWIDTH_POSTPAID_BY_HOUR'}
-                onChange={() => setFieldValue('internetAccessible', { ...values.internetAccessible, internetChargeType: 'BANDWIDTH_POSTPAID_BY_HOUR' })}
+                onChange={() =>
+                  setFieldValue('internetAccessible', {
+                    ...values.internetAccessible,
+                    internetChargeType: 'BANDWIDTH_POSTPAID_BY_HOUR',
+                  })
+                }
               />
               Bill by Bandwidth
             </label>
@@ -186,7 +197,12 @@ export class ServerGroupAdvancedSettingsCommon extends React.Component<IServerGr
               <input
                 type="radio"
                 checked={values.internetAccessible.internetChargeType === 'TRAFFIC_POSTPAID_BY_HOUR'}
-                onChange={() => setFieldValue('internetAccessible', { ...values.internetAccessible, internetChargeType: 'TRAFFIC_POSTPAID_BY_HOUR' })}
+                onChange={() =>
+                  setFieldValue('internetAccessible', {
+                    ...values.internetAccessible,
+                    internetChargeType: 'TRAFFIC_POSTPAID_BY_HOUR',
+                  })
+                }
               />
               By Traffic
             </label>
@@ -197,13 +213,18 @@ export class ServerGroupAdvancedSettingsCommon extends React.Component<IServerGr
             <b>Bandwidth</b>
           </div>
           <div className="col-md-2">
-          <input
+            <input
               type="number"
               className="form-control input-sm"
               value={values.internetAccessible.internetMaxBandwidthOut}
               min={0}
               max={100}
-              onChange={e => setFieldValue('internetAccessible', { ...values.internetAccessible, internetMaxBandwidthOut: e.target.value })}
+              onChange={e =>
+                setFieldValue('internetAccessible', {
+                  ...values.internetAccessible,
+                  internetMaxBandwidthOut: e.target.value,
+                })
+              }
               required={true}
             />
           </div>{' '}
@@ -218,7 +239,9 @@ export class ServerGroupAdvancedSettingsCommon extends React.Component<IServerGr
               <input
                 type="radio"
                 checked={values.internetAccessible.publicIpAssigned === true}
-                onChange={() => setFieldValue('internetAccessible', { ...values.internetAccessible, publicIpAssigned: true })}
+                onChange={() =>
+                  setFieldValue('internetAccessible', { ...values.internetAccessible, publicIpAssigned: true })
+                }
                 id="associatePublicIpAddressTrue"
               />
               Yes
@@ -229,7 +252,9 @@ export class ServerGroupAdvancedSettingsCommon extends React.Component<IServerGr
               <input
                 type="radio"
                 checked={values.internetAccessible.publicIpAssigned === false}
-                onChange={() => setFieldValue('internetAccessible', { ...values.internetAccessible, publicIpAssigned: false })}
+                onChange={() =>
+                  setFieldValue('internetAccessible', { ...values.internetAccessible, publicIpAssigned: false })
+                }
                 id="associatePublicIpAddressFalse"
               />
               No
@@ -240,13 +265,15 @@ export class ServerGroupAdvancedSettingsCommon extends React.Component<IServerGr
           <div className="col-md-5 sm-label-right">
             <b>System disk</b>
           </div>
-          <div className="col-md-3" style={{ 'paddingRight': 0 }}>
+          <div className="col-md-3" style={{ paddingRight: 0 }}>
             <Select
               required={true}
               clearable={false}
               value={values.systemDisk.diskType}
               options={values.backingData.diskTypes.map(m => ({ label: m, value: m }))}
-              onChange={(option: Option) => setFieldValue('systemDisk', { ...values.systemDisk, diskType: option.value })}
+              onChange={(option: Option) =>
+                setFieldValue('systemDisk', { ...values.systemDisk, diskType: option.value })
+              }
             />
           </div>
           <div className="col-md-2">
@@ -267,68 +294,68 @@ export class ServerGroupAdvancedSettingsCommon extends React.Component<IServerGr
             <b>Data disk (optional)</b>
           </div>
           <div>
-          <table className={`table table-condensed packed`}>
-            <thead>
-              <tr>
-                <th className="col-md-4">Disk Type</th>
-                <th className="col-md-4">Disk Size(GB)</th>
-                <th className="col-md-4">Snapshot ID</th>
-                <th />
-              </tr>
-            </thead>
-            <tbody>
-              {values.dataDisks.map((dataDisk, index) => (
-                <tr key={index}>
-                  <td>
-                    <Select
-                      required={true}
-                      clearable={false}
-                      value={dataDisk.diskType}
-                      options={values.backingData.diskTypes.map(m => ({ label: m, value: m }))}
-                      onChange={(option: Option) => this.dataDiskTypeChange(dataDisk, option.value as string)}
-                    />
-                  </td>
-                  <td>
-                  <input
-                    type="number"
-                    className="form-control input-sm"
-                    value={dataDisk.diskSize}
-                    min={10}
-                    max={1024}
-                    onChange={e => this.dataDiskSizeChange(dataDisk, parseInt(e.target.value, 10))}
-                    required={true}
-                  />
-                  </td>
-                  <td>
-                    <input
-                      className="form-control input input-sm"
-                      type="text"
-                      value={dataDisk.snapshotId}
-                      onChange={e => this.dataDiskSnapshotIdChange(dataDisk, e.target.value)}
-                    />
-                  </td>
-                  <td>
-                    <div className="form-control-static">
-                      <a className="clickable" onClick={() => this.onDeleteDataDisk(index)}>
-                        <span className="glyphicon glyphicon-trash" />
-                        <span className="sr-only">Remove Data Disk</span>
-                      </a>
-                    </div>
+            <table className={`table table-condensed packed`}>
+              <thead>
+                <tr>
+                  <th className="col-md-4">Disk Type</th>
+                  <th className="col-md-4">Disk Size(GB)</th>
+                  <th className="col-md-4">Snapshot ID</th>
+                  <th />
+                </tr>
+              </thead>
+              <tbody>
+                {values.dataDisks.map((dataDisk, index) => (
+                  <tr key={index}>
+                    <td>
+                      <Select
+                        required={true}
+                        clearable={false}
+                        value={dataDisk.diskType}
+                        options={values.backingData.diskTypes.map(m => ({ label: m, value: m }))}
+                        onChange={(option: Option) => this.dataDiskTypeChange(dataDisk, option.value as string)}
+                      />
+                    </td>
+                    <td>
+                      <input
+                        type="number"
+                        className="form-control input-sm"
+                        value={dataDisk.diskSize}
+                        min={10}
+                        max={1024}
+                        onChange={e => this.dataDiskSizeChange(dataDisk, parseInt(e.target.value, 10))}
+                        required={true}
+                      />
+                    </td>
+                    <td>
+                      <input
+                        className="form-control input input-sm"
+                        type="text"
+                        value={dataDisk.snapshotId}
+                        onChange={e => this.dataDiskSnapshotIdChange(dataDisk, e.target.value)}
+                      />
+                    </td>
+                    <td>
+                      <div className="form-control-static">
+                        <a className="clickable" onClick={() => this.onDeleteDataDisk(index)}>
+                          <span className="glyphicon glyphicon-trash" />
+                          <span className="sr-only">Remove Data Disk</span>
+                        </a>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td colSpan={4}>
+                    <button type="button" className="btn btn-block btn-sm add-new" onClick={this.onAddDataDisk}>
+                      <span className="glyphicon glyphicon-plus-sign" />
+                      {'Add Data Disk'}
+                    </button>
                   </td>
                 </tr>
-                ))}
-            </tbody>
-            <tfoot>
-              <tr>
-                <td colSpan={4}>
-                  <button type="button" className="btn btn-block btn-sm add-new" onClick={this.onAddDataDisk}>
-                    <span className="glyphicon glyphicon-plus-sign" />
-                    {'Add Data Disk'}
-                  </button>
-                </td>
-              </tr>
-            </tfoot>
-          </table>
+              </tfoot>
+            </table>
           </div>
         </div>
         <div className="form-group">

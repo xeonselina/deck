@@ -39,11 +39,12 @@ export class CreateScalingPolicyButton extends React.Component<
     ModalInjector.modalService
       .open({
         templateUrl: require('./upsert/upsertScalingPolicy.modal.html'),
-        controller: 'awsUpsertScalingPolicyCtrl',
+        controller: 'tencentUpsertScalingPolicyCtrl',
         controllerAs: 'ctrl',
         size: 'lg',
         resolve: {
-          policy: () => AwsReactInjector.tencentServerGroupTransformer.constructNewStepScalingPolicyTemplate(serverGroup),
+          policy: () =>
+            AwsReactInjector.tencentServerGroupTransformer.constructNewStepScalingPolicyTemplate(serverGroup),
           serverGroup: () => serverGroup,
           application: () => application,
         },
@@ -66,9 +67,12 @@ export class CreateScalingPolicyButton extends React.Component<
     // const { min, max } = this.props.serverGroup.capacity;
     return (
       <div>
-        <a className="clickable" onClick={() => {
-          this.typeSelected('step')
-        }}>
+        <a
+          className="clickable"
+          onClick={() => {
+            this.typeSelected('step');
+          }}
+        >
           Create new scaling policy
         </a>
       </div>

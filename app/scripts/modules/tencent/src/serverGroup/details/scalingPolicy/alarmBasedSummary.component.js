@@ -31,7 +31,7 @@ module.exports = angular
         this.editPolicy = () => {
           $uibModal.open({
             templateUrl: require('./upsert/upsertScalingPolicy.modal.html'),
-            controller: 'awsUpsertScalingPolicyCtrl',
+            controller: 'tencentUpsertScalingPolicyCtrl',
             controllerAs: 'ctrl',
             size: 'lg',
             resolve: {
@@ -46,7 +46,7 @@ module.exports = angular
           var taskMonitor = {
             application: this.application,
             title: 'Deleting scaling policy ' + this.policy.policyName,
-            onTaskComplete: () => this.application.serverGroups.refresh()
+            onTaskComplete: () => this.application.serverGroups.refresh(),
           };
 
           var submitMethod = () =>

@@ -15,13 +15,12 @@ import {
   ModalWizard,
 } from '@spinnaker/core';
 
-
 module.exports = angular
   .module('spinnaker.tencent.securityGroup.baseConfig.controller', [
     require('@uirouter/angularjs').default,
     SECURITY_GROUP_READER,
   ])
-  .controller('awsConfigSecurityGroupMixin', [
+  .controller('tencentConfigSecurityGroupMixin', [
     '$scope',
     '$state',
     '$uibModalInstance',
@@ -44,7 +43,7 @@ module.exports = angular
       $scope.allVpcs = [];
       $scope.wizard = ModalWizard;
       $scope.hideClassic = false;
-      $scope.regionFilters = []
+      $scope.regionFilters = [];
       ctrl.addMoreItems = function() {
         $scope.state.infiniteScroll.currentItems += $scope.state.infiniteScroll.numToAdd;
       };
@@ -109,7 +108,7 @@ module.exports = angular
         // sigh.
         securityGroup.account = securityGroup.accountId = securityGroup.accountName = securityGroup.credentials;
         AccountService.getRegionsForAccount(getAccount()).then(regions => {
-          $scope.regionFilters = regions
+          $scope.regionFilters = regions;
           $scope.regions = regions.map(region => region.name);
           clearSecurityGroups();
           ctrl.regionUpdated();
@@ -120,9 +119,8 @@ module.exports = angular
       };
 
       ctrl.regionUpdated = function() {
-        configureFilteredSecurityGroups()
+        configureFilteredSecurityGroups();
       };
-
 
       function configureFilteredSecurityGroups() {
         var account = getAccount();
@@ -130,7 +128,9 @@ module.exports = angular
         var existingSecurityGroupNames = [];
         var availableSecurityGroups = [];
 
-        var regionalGroupNames = _.get(allSecurityGroups, [account, 'tencent', region].join('.'), []).map(sg => sg.name);
+        var regionalGroupNames = _.get(allSecurityGroups, [account, 'tencent', region].join('.'), []).map(
+          sg => sg.name,
+        );
 
         existingSecurityGroupNames = _.uniq(existingSecurityGroupNames.concat(regionalGroupNames));
 
@@ -160,14 +160,13 @@ module.exports = angular
             protocol: inRule.protocol,
             port: inRule.protocol == 'ICMP' ? undefined : inRule.port,
             cidrBlock: inRule.cidrBlock,
-            action: inRule.action
-          }))
-        }
+            action: inRule.action,
+          })),
+        };
         $scope.taskMonitor.submit(function() {
           return SecurityGroupWriter.upsertSecurityGroup(command, application, descriptor);
         });
       };
-
 
       function setSecurityGroupRefreshTime() {
         $scope.state.refreshTime = InfrastructureCaches.get('securityGroups').getStats().ageMax;
@@ -187,7 +186,7 @@ module.exports = angular
 
           var availableGroups;
           if (account && region) {
-            availableGroups = securityGroups[account] && securityGroups[account].tencent[region] || [];
+            availableGroups = (securityGroups[account] && securityGroups[account].tencent[region]) || [];
           } else {
             availableGroups = securityGroups;
           }
@@ -201,7 +200,6 @@ module.exports = angular
       ctrl.cancel = function() {
         $uibModalInstance.dismiss();
       };
-
 
       ctrl.updateName = function() {
         const { securityGroup } = $scope;
@@ -220,7 +218,7 @@ module.exports = angular
         ruleset.push({
           action: 'ACCEPT',
           protocol: 'TCP',
-          port: 7001
+          port: 7001,
         });
       };
 

@@ -8,7 +8,7 @@ module.exports = angular
   .module('spinnaker.tencent.securityGroup.clone.controller', [
     require('../configure/configSecurityGroup.mixin.controller').name,
   ])
-  .controller('awsCloneSecurityGroupController', [
+  .controller('tencentCloneSecurityGroupController', [
     '$scope',
     '$uibModalInstance',
     '$controller',
@@ -29,7 +29,7 @@ module.exports = angular
 
       angular.extend(
         this,
-        $controller('awsConfigSecurityGroupMixin', {
+        $controller('tencentConfigSecurityGroupMixin', {
           $scope: $scope,
           $uibModalInstance: $uibModalInstance,
           application: application,
@@ -37,20 +37,21 @@ module.exports = angular
         }),
       );
 
-
       AccountService.listAccounts('tencent').then(function(accounts) {
         $scope.accounts = accounts;
         vm.accountUpdated();
       });
 
-      securityGroup.securityGroupIngress = securityGroup.inRules ? securityGroup.inRules.map((inRule) => ({
-        index: inRule.index,
-        protocol: inRule.protocol,
-        port: inRule.port,
-        cidrBlock: inRule.cidrBlock,
-        action: inRule.action,
-        existing: true
-      })) : []
+      securityGroup.securityGroupIngress = securityGroup.inRules
+        ? securityGroup.inRules.map(inRule => ({
+            index: inRule.index,
+            protocol: inRule.protocol,
+            port: inRule.port,
+            cidrBlock: inRule.cidrBlock,
+            action: inRule.action,
+            existing: true,
+          }))
+        : [];
       vm.upsert = function() {
         // <account-select-field> only updates securityGroup.credentials, but Orca looks at account* before looking at credentials
         // Updating the rest of the attributes to send the correct (expected) account for all attributes

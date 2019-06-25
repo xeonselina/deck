@@ -9,7 +9,7 @@ module.exports = angular
     require('@uirouter/angularjs').default,
     CACHE_INITIALIZER_SERVICE,
   ])
-  .controller('awsCreateSecurityGroupCtrl', [
+  .controller('tencentCreateSecurityGroupCtrl', [
     '$scope',
     '$uibModalInstance',
     '$state',
@@ -22,18 +22,18 @@ module.exports = angular
         location: require('./createSecurityGroupProperties.html'),
         ingress: require('./createSecurityGroupIngress.html'),
       };
-      $scope.regionFilters = []
+      $scope.regionFilters = [];
       var ctrl = this;
 
       ctrl.translate = label => FirewallLabels.get(label);
-      ctrl.protocolChange = (rule) => {
-        if(rule.protocol == 'ICMP'){
-          rule.port = ''
+      ctrl.protocolChange = rule => {
+        if (rule.protocol == 'ICMP') {
+          rule.port = '';
         }
-      }
+      };
       angular.extend(
         this,
-        $controller('awsConfigSecurityGroupMixin', {
+        $controller('tencentConfigSecurityGroupMixin', {
           $scope: $scope,
           $uibModalInstance: $uibModalInstance,
           application: application,

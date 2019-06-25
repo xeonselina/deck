@@ -22,7 +22,7 @@ module.exports = angular
     require('../../vpc/vpcTag.directive').name,
     CONFIRMATION_MODAL_SERVICE,
   ])
-  .controller('awsInstanceDetailsCtrl', [
+  .controller('tencentInstanceDetailsCtrl', [
     '$scope',
     '$state',
     '$uibModal',
@@ -124,17 +124,18 @@ module.exports = angular
                     return true;
                   }
                 }) ||
-                loadBalancer.targetGroups && loadBalancer.targetGroups.some(function(targetGroup) {
-                  return targetGroup.instances.some(function(possibleInstance) {
-                    if (possibleInstance.id === instance.instanceId) {
-                      instanceSummary = possibleInstance;
-                      targetGroups = [targetGroup.name];
-                      account = loadBalancer.account;
-                      region = loadBalancer.region;
-                      return true;
-                    }
-                  });
-                })
+                (loadBalancer.targetGroups &&
+                  loadBalancer.targetGroups.some(function(targetGroup) {
+                    return targetGroup.instances.some(function(possibleInstance) {
+                      if (possibleInstance.id === instance.instanceId) {
+                        instanceSummary = possibleInstance;
+                        targetGroups = [targetGroup.name];
+                        account = loadBalancer.account;
+                        region = loadBalancer.region;
+                        return true;
+                      }
+                    });
+                  }))
               );
             });
             if (!instanceSummary) {
@@ -300,7 +301,7 @@ module.exports = angular
         var submitMethod = function() {
           return amazonInstanceWriter.terminateInstance(instance, app, {
             cloudProvider: instance.cloudProvider,
-            serverGroupName: instance.serverGroupName
+            serverGroupName: instance.serverGroupName,
           });
         };
 
@@ -329,9 +330,9 @@ module.exports = angular
 
         var submitMethod = function() {
           return amazonInstanceWriter.terminateInstanceAndShrinkServerGroup(instance, app, {
-            instanceIds : [instance.id],
+            instanceIds: [instance.id],
             cloudProvider: instance.cloudProvider,
-            serverGroupName: instance.serverGroupName
+            serverGroupName: instance.serverGroupName,
           });
         };
 

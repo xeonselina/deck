@@ -6,7 +6,7 @@ import { SecurityGroupWriter, TaskMonitor, FirewallLabels } from '@spinnaker/cor
 
 module.exports = angular
   .module('spinnaker.tencent.securityGroup.edit.controller', [require('@uirouter/angularjs').default])
-  .controller('awsEditSecurityGroupCtrl', [
+  .controller('tencentEditSecurityGroupCtrl', [
     '$scope',
     '$uibModalInstance',
     '$state',
@@ -26,15 +26,15 @@ module.exports = angular
 
       $scope.securityGroup.regions = [$scope.securityGroup.region];
       $scope.securityGroup.credentials = $scope.securityGroup.accountName;
-      let ctrl = this
-      ctrl.protocolChange = (rule) => {
-        if(rule.protocol == 'ICMP'){
-          rule.port = ''
+      let ctrl = this;
+      ctrl.protocolChange = rule => {
+        if (rule.protocol == 'ICMP') {
+          rule.port = '';
         }
-      }
+      };
       angular.extend(
         this,
-        $controller('awsConfigSecurityGroupMixin', {
+        $controller('tencentConfigSecurityGroupMixin', {
           $scope: $scope,
           $uibModalInstance: $uibModalInstance,
           application: application,
@@ -51,14 +51,16 @@ module.exports = angular
         onTaskComplete: () => application.securityGroups.refresh(),
       });
 
-      securityGroup.securityGroupIngress = securityGroup.inRules ? securityGroup.inRules.map((inRule) => ({
-        index: inRule.index,
-        protocol: inRule.protocol,
-        port: inRule.port,
-        cidrBlock: inRule.cidrBlock,
-        action: inRule.action,
-        existing: true
-      })): []
+      securityGroup.securityGroupIngress = securityGroup.inRules
+        ? securityGroup.inRules.map(inRule => ({
+            index: inRule.index,
+            protocol: inRule.protocol,
+            port: inRule.port,
+            cidrBlock: inRule.cidrBlock,
+            action: inRule.action,
+            existing: true,
+          }))
+        : [];
 
       this.upsert = function() {
         let command = {
@@ -77,8 +79,8 @@ module.exports = angular
             protocol: inRule.protocol,
             port: inRule.protocol == 'ICMP' ? undefined : inRule.port,
             cidrBlock: inRule.cidrBlock,
-            action: inRule.action
-          }))
+            action: inRule.action,
+          })),
         };
 
         $scope.taskMonitor.submit(function() {

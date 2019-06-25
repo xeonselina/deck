@@ -16,7 +16,7 @@ module.exports = angular
     STEP_POLICY_ACTION,
     require('./alarm/alarmConfigurer.component').name,
   ])
-  .controller('awsUpsertScalingPolicyCtrl', [
+  .controller('tencentUpsertScalingPolicyCtrl', [
     '$uibModalInstance',
     'serverGroup',
     'application',
@@ -96,9 +96,13 @@ module.exports = angular
           estimatedInstanceWarmup: policy.estimatedInstanceWarmup || command.cooldown || 600,
           metricAggregationType: 'AVERAGE',
         };
-        command.step.stepAdjustments = (policy.stepAdjustments || [{
-          adjustmentValue: policy.adjustmentValue
-        }]).map(adjustment => {
+        command.step.stepAdjustments = (
+          policy.stepAdjustments || [
+            {
+              adjustmentValue: policy.adjustmentValue,
+            },
+          ]
+        ).map(adjustment => {
           let step = {
             adjustmentValue: Math.abs(adjustment.adjustmentValue),
           };
@@ -206,7 +210,7 @@ module.exports = angular
             threshold: command.alarm.threshold,
             period: command.alarm.period,
             continuousTime: command.alarm.continuousTime,
-            statistic: command.alarm.statistic
+            statistic: command.alarm.statistic,
           },
           // cooldown: 60
         };

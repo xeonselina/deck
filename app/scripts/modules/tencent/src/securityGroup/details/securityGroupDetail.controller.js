@@ -21,7 +21,7 @@ module.exports = angular
     CONFIRMATION_MODAL_SERVICE,
     require('../clone/cloneSecurityGroup.controller').name,
   ])
-  .controller('awsSecurityGroupDetailsCtrl', [
+  .controller('tencentSecurityGroupDetailsCtrl', [
     '$scope',
     '$state',
     'resolvedSecurityGroup',
@@ -77,7 +77,7 @@ module.exports = angular
             }
           }, fourOhFour);
       }
-      
+
       function fourOhFour() {
         if ($scope.$$destroyed) {
           return;
@@ -153,7 +153,7 @@ module.exports = angular
             cloudProvider: securityGroup.provider,
             region: securityGroup.region,
             securityGroupId: securityGroup.id,
-            accountName: securityGroup.accountId
+            accountName: securityGroup.accountId,
           };
           if (isRetry) {
             Object.assign(params, retryParams);

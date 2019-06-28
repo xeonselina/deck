@@ -45,7 +45,9 @@ export class AwsLoadBalancerTransformer {
     };
 
     if ((container as ITargetGroup | IAmazonLoadBalancer).serverGroups) {
-      const serverGroupInstances = flatten((container as ITargetGroup).serverGroups.filter(sg => !!sg.instances).map(sg => sg.instances));
+      const serverGroupInstances = flatten(
+        (container as ITargetGroup).serverGroups.filter(sg => !!sg.instances).map(sg => sg.instances),
+      );
       container.instanceCounts.up = serverGroupInstances.filter(
         instance => instance.health[0].state === 'InService',
       ).length;
@@ -260,7 +262,6 @@ export class AwsLoadBalancerTransformer {
   public convertApplicationLoadBalancerForEditing(
     loadBalancer: IAmazonApplicationLoadBalancer,
   ): IAmazonApplicationLoadBalancerUpsertCommand {
-
     // Since we build up toEdit as we go, much easier to declare as any, then cast at return time.
     const toEdit: IAmazonApplicationLoadBalancerUpsertCommand = {
       availabilityZones: undefined,
@@ -481,8 +482,8 @@ export class AwsLoadBalancerTransformer {
             intervalTime: 5,
             healthNum: 3,
             unHealthNum: 3,
-            showAdvancedSetting: false
-          }
+            showAdvancedSetting: false,
+          },
         },
       ],
     };
@@ -531,12 +532,6 @@ export class AwsLoadBalancerTransformer {
         {
           protocol: 'TCP',
           port: 80,
-          defaultActions: [
-            {
-              type: 'forward',
-              targetGroupName: defaultTargetGroupName,
-            },
-          ],
           rules: [],
           healthCheck: {
             healthSwitch: 1,
@@ -548,8 +543,8 @@ export class AwsLoadBalancerTransformer {
             httpCode: 31,
             httpCheckPath: '/',
             httpCheckDomain: '',
-            httpCheckMethod: 'GET'
-          }
+            httpCheckMethod: 'GET',
+          },
         },
       ],
     };

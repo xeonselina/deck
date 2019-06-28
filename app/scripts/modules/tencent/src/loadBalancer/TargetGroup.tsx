@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { orderBy } from 'lodash';
-import { HealthCounts, LoadBalancerInstances, LoadBalancerServerGroup, API, IServerGroup } from '@spinnaker/core';
+import { LoadBalancerInstances, LoadBalancerServerGroup, API, IServerGroup } from '@spinnaker/core';
 
 import { IAmazonApplicationLoadBalancer, ITargetGroup } from 'tencent/domain/IAmazonLoadBalancer';
 
@@ -14,7 +14,7 @@ export interface ITargetGroupProps {
 }
 
 interface ITargetGroupState {
-  serverGroups: IServerGroup[]
+  serverGroups: IServerGroup[];
 }
 
 export class TargetGroup extends React.Component<ITargetGroupProps, ITargetGroupState> {
@@ -25,23 +25,31 @@ export class TargetGroup extends React.Component<ITargetGroupProps, ITargetGroup
     };
   }
   public componentDidMount(): void {
-    const { loadBalancer: { application, id } } = this.props
-    API.one('applications').one(application).all('serverGroups').getList().then((serverGroups: IServerGroup[]) => {
-      this.setState({
-        serverGroups: serverGroups.filter(sg => sg.loadBalancers && sg.loadBalancers[0] === id).map(sg => ({
-          ...sg,
-          detachedInstances: [],
-          instances: sg.instances.map(i => ({
-            ...i,
-            cloudProvider: sg.cloudProvider
-          }))
-        }))
-      })
-    })
+    const {
+      loadBalancer: { application, id },
+    } = this.props;
+    API.one('applications')
+      .one(application)
+      .all('serverGroups')
+      .getList()
+      .then((serverGroups: IServerGroup[]) => {
+        this.setState({
+          serverGroups: serverGroups
+            .filter(sg => sg.loadBalancers && sg.loadBalancers[0] === id)
+            .map(sg => ({
+              ...sg,
+              detachedInstances: [],
+              instances: sg.instances.map(i => ({
+                ...i,
+                cloudProvider: sg.cloudProvider,
+              })),
+            })),
+        });
+      });
   }
   public render(): React.ReactElement<TargetGroup> {
     const { showInstances, showServerGroups } = this.props;
-    const { serverGroups } = this.state
+    const { serverGroups } = this.state;
     const ServerGroups = orderBy(serverGroups, ['isDisabled', 'name'], ['asc', 'desc']).map(serverGroup => (
       <LoadBalancerServerGroup
         key={serverGroup.name}
@@ -55,7 +63,10 @@ export class TargetGroup extends React.Component<ITargetGroupProps, ITargetGroup
       <div className="target-group-container container-fluid no-padding">
         {showServerGroups && ServerGroups}
         {!showServerGroups && showInstances && (
-          <LoadBalancerInstances serverGroups={serverGroups} instances={serverGroups.reduce((a, c) => a.concat(c.instances), [])} />
+          <LoadBalancerInstances
+            serverGroups={serverGroups}
+            instances={serverGroups.reduce((a, c) => a.concat(c.instances), [])}
+          />
         )}
       </div>
     );

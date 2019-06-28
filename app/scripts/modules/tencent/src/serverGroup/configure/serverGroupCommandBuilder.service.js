@@ -24,7 +24,8 @@ module.exports = angular
 
         var defaultCredentials =
           defaults.account || application.defaultCredentials.tencent || AWSProviderSettings.defaults.account;
-        var defaultRegion = defaults.region || application.defaultRegions.tencent || AWSProviderSettings.defaults.region;
+        var defaultRegion =
+          defaults.region || application.defaultRegions.tencent || AWSProviderSettings.defaults.region;
         var defaultSubnet = defaults.subnet || AWSProviderSettings.defaults.subnetType || '';
 
         var preferredZonesLoader = AccountService.getAvailabilityZonesForAccountAndRegion(
@@ -45,7 +46,6 @@ module.exports = angular
             var keyPair = credentials ? credentials.defaultKeyPair : null;
             var applicationAwsSettings = _.get(application, 'attributes.providerSettings.tencent', {});
 
-
             var useAmiBlockDeviceMappings = applicationAwsSettings.useAmiBlockDeviceMappings || false;
 
             var command = {
@@ -63,11 +63,11 @@ module.exports = angular
               enabledMetrics: [],
               enhancedService: {
                 monitorService: {
-                    enabled: true
+                  enabled: true,
                 },
                 securityService: {
-                    enabled: true
-                }
+                  enabled: true,
+                },
               },
               ebsOptimized: false,
               selectedProvider: 'tencent',
@@ -94,10 +94,11 @@ module.exports = angular
                 dirty: {},
                 submitButtonLabel: getSubmitButtonLabel(defaults.mode || 'create'),
               },
+              forwardLoadBalancers: [],
               internetAccessible: {
                 internetChargeType: 'TRAFFIC_POSTPAID_BY_HOUR',
                 internetMaxBandwidthOut: 1,
-                publicIpAssigned: true
+                publicIpAssigned: true,
               },
               systemDisk: {
                 diskType: 'CLOUD_PREMIUM',
@@ -105,7 +106,7 @@ module.exports = angular
               },
               dataDisks: [],
               weight: 10,
-              userData: ''
+              userData: '',
             };
 
             if (
@@ -140,8 +141,7 @@ module.exports = angular
             instanceProfile: asyncData.instanceProfile,
             disableImageSelection: true,
             useSimpleCapacity:
-              pipelineCluster.minSize === pipelineCluster.maxSize &&
-              pipelineCluster.useSourceCapacity !== true,
+              pipelineCluster.minSize === pipelineCluster.maxSize && pipelineCluster.useSourceCapacity !== true,
             usePreferredZones: true,
             mode: 'editPipeline',
             submitButtonLabel: 'Done',
@@ -149,22 +149,19 @@ module.exports = angular
             existingPipelineCluster: true,
             dirty: {},
           };
-          const forwardLoadBalancer = pipelineCluster.forwardLoadBalancers && pipelineCluster.forwardLoadBalancers[0]
           var viewOverrides = {
             region: region,
             credentials: pipelineCluster.account || pipelineCluster.accountName,
             availabilityZones: [],
             viewState: viewState,
             securityGroups: pipelineCluster.securityGroupIds,
-            tags: pipelineCluster.instanceTags && pipelineCluster.instanceTags.length ? pipelineCluster.instanceTags.reduce((pre, current) => {
-              pre[current.key] = current.value
-              return pre 
-            }, {}) : {},
-            loadBalancerId: forwardLoadBalancer && forwardLoadBalancer.loadBalancerId,
-            listenerId: forwardLoadBalancer && forwardLoadBalancer.listenerId,
-            locationId: forwardLoadBalancer && forwardLoadBalancer.locationId,
-            port: forwardLoadBalancer && forwardLoadBalancer.targetAttributes && forwardLoadBalancer.targetAttributes[0].port, 
-            weight: forwardLoadBalancer && forwardLoadBalancer.targetAttributes && forwardLoadBalancer.targetAttributes[0].weight, 
+            tags:
+              pipelineCluster.instanceTags && pipelineCluster.instanceTags.length
+                ? pipelineCluster.instanceTags.reduce((pre, current) => {
+                    pre[current.key] = current.value;
+                    return pre;
+                  }, {})
+                : {},
           };
 
           pipelineCluster.strategy = pipelineCluster.strategy || '';
@@ -224,7 +221,6 @@ module.exports = angular
         });
 
         return asyncLoader.then(function(asyncData) {
-
           // These processes should never be copied over, as the affect launching instances and enabling traffic
           let enabledProcesses = ['Launch', 'Terminate', 'AddToLoadBalancer'];
 
@@ -242,7 +238,6 @@ module.exports = angular
                 existingTags[tag.key] = tag.value;
               });
           }
-          const listener = serverGroup.asg.forwardLoadBalancerSet && serverGroup.asg.forwardLoadBalancerSet.length && serverGroup.asg.forwardLoadBalancerSet[0]
           var command = {
             application: application.name,
             strategy: '',
@@ -253,11 +248,9 @@ module.exports = angular
             enabledMetrics: _.get(serverGroup, 'asg.enabledMetrics', []).map(m => m.metric),
             terminationPolicies: serverGroup.asg.terminationPolicySet,
             loadBalancers: serverGroup.asg.loadBalancerNames,
-            loadBalancerId: serverGroup.loadBalancers && serverGroup.loadBalancers.length && serverGroup.loadBalancers[0],
-            listenerId: listener && listener.listenerId,
-            locationId: listener && listener.locationId,
-            port: listener && listener.targetAttributes[0].port,
-            weight: listener && listener.targetAttributes[0].weight,
+            loadBalancerId:
+              serverGroup.loadBalancers && serverGroup.loadBalancers.length && serverGroup.loadBalancers[0],
+            forwardLoadBalancers: serverGroup.asg.forwardLoadBalancerSet,
             region: serverGroup.region,
             useSourceCapacity: false,
             capacity: {
@@ -307,21 +300,21 @@ module.exports = angular
             command.suspendedProcesses = [];
           }
 
-          
           command.subnetIds = serverGroup.asg && serverGroup.asg.subnetIdSet;
           command.vpcId = serverGroup.asg.vpcId;
 
           if (serverGroup.launchConfig) {
             angular.extend(command, {
               instanceType: serverGroup.launchConfig.instanceType,
-              keyPair: serverGroup.launchConfig.loginSettings.keyIds && serverGroup.launchConfig.loginSettings.keyIds[0],
+              keyPair:
+                serverGroup.launchConfig.loginSettings.keyIds && serverGroup.launchConfig.loginSettings.keyIds[0],
               associatePublicIpAddress: serverGroup.launchConfig.internetAccessible.publicIpAssigned,
               ramdiskId: serverGroup.launchConfig.ramdiskId,
               enhancedService: serverGroup.launchConfig.enhancedService,
               ebsOptimized: serverGroup.launchConfig.ebsOptimized,
               internetAccessible: serverGroup.launchConfig.internetAccessible,
               systemDisk: serverGroup.launchConfig.systemDisk,
-              dataDisks: serverGroup.launchConfig.dataDisks
+              dataDisks: serverGroup.launchConfig.dataDisks,
             });
             if (serverGroup.launchConfig.userData) {
               command.userData = serverGroup.launchConfig.userData;

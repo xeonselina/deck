@@ -98,7 +98,6 @@ export interface IALBListenerCertificate {
 
 export interface IALBListener {
   certificates: IALBListenerCertificate[];
-  defaultActions: IListenerAction[];
   port: number;
   protocol: string;
   rules: IListenerRule[];
@@ -123,7 +122,7 @@ export interface IListenerRule {
   healthCheck?: ITencentHealthCheck;
   default?: boolean;
   priority?: number | 'default';
-  [key: string]: any
+  [key: string]: any;
 }
 
 export type ListenerRuleConditionField = 'path-pattern' | 'host-header';
@@ -176,7 +175,7 @@ export interface IListenerDescription {
   sslPolicy?: string;
   rules?: IListenerRule[];
   healthCheck?: ITencentHealthCheck;
-  listenerName?: string
+  listenerName?: string;
 }
 
 export interface IALBTargetGroupDescription {

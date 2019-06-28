@@ -6,7 +6,7 @@ import { TaskExecutor, TaskMonitor } from '@spinnaker/core';
 import { format } from 'date-fns';
 module.exports = angular
   .module('spinnaker.tencent.serverGroup.details.scheduledActions.editScheduledActions.modal.controller', [])
-  .controller('EditScheduledActionsCtrl', [
+  .controller('tencentEditScheduledActionsCtrl', [
     '$scope',
     '$uibModalInstance',
     'application',
@@ -23,9 +23,9 @@ module.exports = angular
             minSize: action.minSize,
             maxSize: action.maxSize,
             desiredCapacity: action.desiredCapacity,
-            operationType: 'MODIFY'
+            operationType: 'MODIFY',
           };
-        })
+        }),
       };
 
       $scope.serverGroup = serverGroup;
@@ -33,7 +33,7 @@ module.exports = angular
       this.addScheduledAction = () => {
         $scope.command.scheduledActions.push({
           repeat: 'No',
-          operationType: 'CREATE'
+          operationType: 'CREATE',
         });
       };
 
@@ -41,12 +41,11 @@ module.exports = angular
         $scope.command.scheduledActions.splice(index, 1);
       };
 
-      this.isRepeatChange = (action) => {
-        if(action.repeat == 'No'){
-          action.recurrence = '',
-          action.endTime = ''
+      this.isRepeatChange = action => {
+        if (action.repeat == 'No') {
+          (action.recurrence = ''), (action.endTime = '');
         }
-      }
+      };
 
       $scope.taskMonitor = new TaskMonitor({
         application: application,
@@ -55,12 +54,15 @@ module.exports = angular
         onTaskComplete: () => application.serverGroups.refresh(),
       });
 
-      let getBeijingTime = (date) => {
-        const timezone = 8 //目标时区时间，东八区
-        const offset_GMT = new Date().getTimezoneOffset() // 本地时间和格林威治的时间差，单位为分钟
-        const nowDate = new Date(date).getTime() // 本地时间距 1970 年 1 月 1 日午夜（GMT 时间）之间的毫秒数
-        return format(new Date(nowDate + offset_GMT * 60 * 1000 + timezone * 60 * 60 * 1000), 'YYYY-MM-DDTHH:mm:ss+08:00')
-      }
+      let getBeijingTime = date => {
+        const timezone = 8; //目标时区时间，东八区
+        const offset_GMT = new Date().getTimezoneOffset(); // 本地时间和格林威治的时间差，单位为分钟
+        const nowDate = new Date(date).getTime(); // 本地时间距 1970 年 1 月 1 日午夜（GMT 时间）之间的毫秒数
+        return format(
+          new Date(nowDate + offset_GMT * 60 * 1000 + timezone * 60 * 60 * 1000),
+          'YYYY-MM-DDTHH:mm:ss+08:00',
+        );
+      };
 
       this.submit = () => {
         var job = $scope.command.scheduledActions.map(sa => ({
@@ -79,9 +81,8 @@ module.exports = angular
           desiredCapacity: sa.desiredCapacity,
           startTime: getBeijingTime(sa.startTime),
           endTime: sa.repeat == 'Yes' && sa.recurrence ? getBeijingTime(sa.endTime) : '0000-00-00T00:00:00+08:00',
-          recurrence: sa.repeat == 'Yes' ? sa.recurrence : '* * * * *'
-        }))
-
+          recurrence: sa.repeat == 'Yes' ? sa.recurrence : '* * * * *',
+        }));
 
         var submitMethod = function() {
           return TaskExecutor.executeTask({

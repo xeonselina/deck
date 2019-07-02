@@ -114,9 +114,10 @@ export class AmazonImageSelectInput extends React.Component<IAmazonImageSelector
   }
 
   private findMatchingImage(images: IAmazonImage[], selectedImage: IAmazonImage) {
-    const { region } = this.props
-    const selectImageId = selectedImage && selectedImage.imgIds[region] && selectedImage && selectedImage.imgIds[region][0]
-    return images.find(img => img.imgIds[region] && img.imgIds[region][0] === selectImageId );
+    const { region } = this.props;
+    const selectImageId =
+      selectedImage && selectedImage.imgIds[region] && selectedImage && selectedImage.imgIds[region][0];
+    return images.find(img => img.imgIds[region] && img.imgIds[region][0] === selectImageId);
   }
 
   public componentDidMount() {
@@ -238,7 +239,15 @@ export class AmazonImageSelectInput extends React.Component<IAmazonImageSelector
   private sortImages(images: IAmazonImage[], sortImagesBy: sortImagesByOptions): IAmazonImage[] {
     return images.slice().sort((a, b) => {
       if (sortImagesBy === 'ts') {
-        return b.attributes.createdTime.localeCompare(a.attributes.createdTime);
+        if (a.attributes.createdTime && b.attributes.createdTime) {
+          return b.attributes.createdTime.localeCompare(a.attributes.createdTime);
+        } else if (!a.attributes.createdTime && b.attributes.createdTime) {
+          return 1;
+        } else if (a.attributes.createdTime && !b.attributes.createdTime) {
+          return -1;
+        } else {
+          return 0;
+        }
       }
       return a.imageName.localeCompare(b.imageName);
     });
@@ -263,7 +272,7 @@ export class AmazonImageSelectInput extends React.Component<IAmazonImageSelector
       >
         <div>{option.imageName}</div>
         <div className="small">
-          <b>Created: </b>
+          {option.attributes.createdTime ? <b>Created: </b> : null}
           {option.attributes.createdTime}
           <b className="sp-padding-s-left">imageId: </b>
           {imageLabel}

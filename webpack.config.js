@@ -6,6 +6,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
+const GlobalizePlugin = require('globalize-webpack-plugin');
 
 const CACHE_INVALIDATE = getCacheInvalidateString();
 const NODE_MODULE_PATH = path.join(__dirname, 'node_modules');
@@ -176,6 +177,13 @@ function configure(env, webpackOpts) {
         favicon: process.env.NODE_ENV === 'production' ? 'app/prod-favicon.ico' : 'app/dev-favicon.ico',
         inject: true,
         hash: IS_PRODUCTION,
+      }),
+      new GlobalizePlugin({
+        production: IS_PRODUCTION,
+        developmentLocale: 'zh',
+        supportedLocales: ['en', 'zh'],
+        messages: 'messages/[locale].json',
+        output: 'i18n/[locale].[chunkhash].js',
       }),
     ],
     devServer: {

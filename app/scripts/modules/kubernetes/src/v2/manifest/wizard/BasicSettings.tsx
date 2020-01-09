@@ -5,6 +5,8 @@ import { AccountSelectInput, Application, HelpField, IAccount } from '@spinnaker
 
 import { IKubernetesManifestCommandData } from 'kubernetes/v2/manifest/manifestCommandBuilder.service';
 
+const Globalize = require('globalize');
+
 export interface IManifestBasicSettingsProps {
   app: Application;
   accounts: IAccount[];
@@ -22,7 +24,7 @@ export function ManifestBasicSettings({
     <div className="form-horizontal">
       <div className="form-group">
         <div className="col-md-3 sm-label-right">
-          Account <HelpField id="kubernetes.manifest.account" />
+          {Globalize.formatMessage('Account')} <HelpField id="kubernetes.manifest.account" />
         </div>
         <div className="col-md-7">
           <AccountSelectInput
@@ -36,7 +38,7 @@ export function ManifestBasicSettings({
       </div>
       <div className="form-group">
         <div className="col-md-3 sm-label-right">
-          Application <HelpField id="kubernetes.manifest.application" />
+          {Globalize.formatMessage('Application')} <HelpField id="kubernetes.manifest.application" />
         </div>
         <div className="col-md-7">
           <input type="text" className="form-control input-sm no-spel" readOnly={true} value={app.name} />

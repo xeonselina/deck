@@ -13,6 +13,7 @@ import { ModalClose } from '../buttons/ModalClose';
 import { SubmitButton } from '../buttons/SubmitButton';
 import { WizardPage } from './WizardPage';
 import { WizardStepLabel } from './WizardStepLabel';
+const Globalize = require('globalize');
 
 export interface IWizardPageInjectedProps<T> {
   formik: FormikProps<T>;
@@ -194,7 +195,7 @@ export class WizardModal<T = {}> extends React.Component<IWizardModalProps<T>, I
 
               <Modal.Footer>
                 <button className="btn btn-default" disabled={isSubmitting} onClick={dismissModal} type="button">
-                  Cancel
+                  {Globalize.formatMessage('Cancel')}
                 </button>
                 <SubmitButton
                   isDisabled={!formik.isValid || isSubmitting || anyLoading || loading}

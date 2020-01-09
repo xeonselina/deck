@@ -17,6 +17,7 @@ import {
 } from 'kubernetes/v2/manifest/manifestCommandBuilder.service';
 import { WizardManifestBasicSettings } from 'kubernetes/v2/manifest/wizard/BasicSettings';
 import { ManifestEntry } from 'kubernetes/v2/manifest/wizard/ManifestEntry';
+const Globalize = require('globalize');
 
 export interface IKubernetesManifestModalProps extends IModalComponentProps {
   title: string;
@@ -71,20 +72,24 @@ export class ManifestWizard extends React.Component<IKubernetesManifestModalProp
   public render() {
     const { application, dismissModal, isNew } = this.props;
     const { loaded, taskMonitor, command } = this.state;
+    const createTxt = Globalize.formatMessage('Create');
+    const editTxt = Globalize.formatMessage('Edit');
+    const deployTxt = Globalize.formatMessage('Deploy');
+    const updateTxt = Globalize.formatMessage('Update');
 
     return (
       <WizardModal<IKubernetesManifestCommandData>
-        heading={`${isNew ? 'Deploy' : 'Update'} Manifest`}
+        heading={`${isNew ? deployTxt : updateTxt} Manifest`}
         initialValues={command}
         loading={!loaded}
         taskMonitor={taskMonitor}
         dismissModal={dismissModal}
         closeModal={this.submit}
-        submitButtonLabel={isNew ? 'Create' : 'Edit'}
+        submitButtonLabel={isNew ? createTxt : editTxt}
         render={({ formik, nextIdx, wizard }) => (
           <>
             <WizardPage
-              label="Basic Settings"
+              label={Globalize.formatMessage('Basic Settings')}
               wizard={wizard}
               order={nextIdx()}
               render={({ innerRef }) => (
@@ -93,7 +98,7 @@ export class ManifestWizard extends React.Component<IKubernetesManifestModalProp
             />
 
             <WizardPage
-              label="Manifest"
+              label={Globalize.formatMessage('Deploy Manifest')}
               wizard={wizard}
               order={nextIdx()}
               render={({ innerRef }) => <ManifestEntry ref={innerRef} formik={formik} app={application} />}

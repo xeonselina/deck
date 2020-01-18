@@ -83,7 +83,7 @@ export class ServerGroupBasicSettings
     if (image) {
       const snapshotSet = (image && image.attributes.snapshotSet) || [];
       const osPlatform = image && image.attributes.osPlatform;
-      const imageName = image && image.imageName;
+      const imageName = image && image.attributes.imageName;
       const imageId = image && image.imgIds[values.region] && image.imgIds[values.region][0];
       if (snapshotSet.length && snapshotSet.some(s => s.diskUsage === 'DATA_DISK')) {
         setFieldValue(

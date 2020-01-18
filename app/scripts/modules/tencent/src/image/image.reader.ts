@@ -21,8 +21,8 @@ export interface IAmazonImage {
     creationDate?: string;
     snapshotSet?: ITencentSnapshot[];
     osPlatform: string;
+    imageName: string;
   };
-  imageName: string;
   tags: {
     [tag: string]: string;
   };
